@@ -49,7 +49,7 @@ public class DB {
                     student.email = rs.getString("EMAIL_ADDR");
                 }
                 Course course = new Course();
-                course.course = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
+                course.courseName = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
                 course.semester = rs.getString("STRM");
                 course.grade = rs.getString("CRSE_GRADE_OFF");
                 course.transferred = false;
@@ -66,7 +66,7 @@ public class DB {
 
             while (rs.next()) {
                 Course course = new Course();
-                course.course = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
+                course.courseName = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
                 course.semester = "";
                 course.grade = rs.getString("CRSE_GRADE_OFF");
                 course.transferred = true;
