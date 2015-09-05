@@ -77,6 +77,6 @@ public class DB {
         } catch (SQLException e) {
             return null;
         }
-        return student;
+        return student.courses.size() == 0 ? null : student;
     }
 }

@@ -31,6 +31,8 @@ public class Main {
                 System.out.print(course.transferred ? "* " : "  ");
                 System.out.println(course.course + " (" + course.grade + ")");
             }
+        } else {
+            System.out.println("Student not found");
         }
         db.close();
     }

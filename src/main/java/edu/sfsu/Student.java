@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student {
+
     public Student(String id) {
         this.id = id;
+        name = "";
+        email = "";
         courses = new ArrayList<>();
     }
 
