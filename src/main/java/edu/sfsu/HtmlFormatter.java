@@ -9,6 +9,45 @@ public class HtmlFormatter {
     final private static String[] ELECTIVES = { "CSC 520", "CSC 631" };
 
 
+    private static String formatSemester(String semester) {
+        if (semester.length() != 4) {
+            return "-";
+        }
+        String year;
+        char firstDigit = semester.charAt(0);
+        switch (firstDigit) {
+        case '1':
+            year = "19";
+            break;
+        case '2':
+            year = "20";
+            break;
+        default:
+            return "-";
+        }
+        String html;
+        year += semester.substring(1, 3);
+        char lastDigit = semester.charAt(3);
+        switch (lastDigit) {
+        case '1':
+            html = "Winter";
+            break;
+        case '3':
+            html = "Spring";
+            break;
+        case '5':
+            html = "Summer";
+            break;
+        case '7':
+            html = "Fall";
+            break;
+        default:
+            return "-";
+        }
+        html += " " + year;
+        return html;
+    }
+
     private static String generateClassList(Student student, String heading, String[] classes) {
         String html = "";
         html += "<h4>" + heading + "</h4>\n";
@@ -30,8 +69,8 @@ public class HtmlFormatter {
                 html += " (T)";
             }
             html += "</th>\n";
-            html += "<th class=\"mdl-data-table__cell--non-numeric\">" + course.semester
-                    + "</th>\n";
+            html += "<th class=\"mdl-data-table__cell--non-numeric\">"
+                    + formatSemester(course.semester) + "</th>\n";
             html += "<th class=\"mdl-data-table__cell--non-numeric\">" + course.grade + "</th>\n";
             html += "</tr>\n";
         }
