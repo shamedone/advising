@@ -26,9 +26,14 @@
     <script>
       function lookup_student() {
         var id = document.getElementById("student_id");
+        var spinner = document.getElementById("spinner");
+        var info = document.getElementById("student_info");
+        info.style.visibility = "hidden";
+        spinner.style.visibility = "visible";
         $.post("student-" + id.value, function(data, status) {
-          var d = document.getElementById("student_info");
-          d.innerHTML = data;
+          info.innerHTML = data;
+          info.style.visibility = "visible";
+          spinner.style.visibility = "hidden";
         });
         return false;
       }
@@ -55,6 +60,7 @@
                   <span class="mdl-textfield__error">Input is not a student ID!</span>
                 </div>
               </form>
+            <div id="spinner" style="visibility: hidden" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
             <div id="student_info"></div>
           </div>
         </div>
