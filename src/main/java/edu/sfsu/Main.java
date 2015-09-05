@@ -1,5 +1,9 @@
 package edu.sfsu;
 
+import edu.sfsu.db.Course;
+import edu.sfsu.db.DB;
+import edu.sfsu.db.Student;
+
 public class Main {
 
     final private static String URL      = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";

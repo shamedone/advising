@@ -1,4 +1,4 @@
-package edu.sfsu;
+package edu.sfsu.db;
 
 import java.sql.*;
 

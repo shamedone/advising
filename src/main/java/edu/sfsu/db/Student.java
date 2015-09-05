@@ -1,4 +1,6 @@
-package edu.sfsu;
+package edu.sfsu.db;
+
+import edu.sfsu.db.Course;
 
 import java.util.ArrayList;
 import java.util.List;
