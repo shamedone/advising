@@ -27,7 +27,9 @@ public class Main {
         if (student != null) {
             System.out.println(student.name + " <" + student.email + "> (" + student.id + ")");
             for (Course course : student.courses) {
-                System.out.println("   " + course.course + " (" + course.grade + ")");
+                System.out.print("    ");
+                System.out.print(course.transferred ? "* " : "  ");
+                System.out.println(course.course + " (" + course.grade + ")");
             }
         }
         db.close();
