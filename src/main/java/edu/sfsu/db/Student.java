@@ -22,10 +22,8 @@ public class Student {
     public Course requirementFor(String courseName) {
         for (Course course : courses) {
             if (course.courseName.equals(courseName)) {
-                if (course.transferred) {
-                    return course;
-                }
-                if (course.grade.equals("F") || course.grade.equals("CR")) {
+                if (course.grade.equals("F") || course.grade.equals("CR")
+                        || course.grade.equals("")) {
                     continue;
                 }
                 return course;

@@ -51,7 +51,7 @@ public class DB {
                 Course course = new Course();
                 course.courseName = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
                 course.semester = rs.getString("STRM");
-                course.grade = rs.getString("CRSE_GRADE_OFF");
+                course.grade = rs.getString("CRSE_GRADE_OFF").replaceAll(" ", "");
                 course.transferred = false;
                 student.courses.add(course);
             }

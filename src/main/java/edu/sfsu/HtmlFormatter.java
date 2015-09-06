@@ -4,9 +4,13 @@ import edu.sfsu.db.Student;
 import edu.sfsu.db.Course;
 
 public class HtmlFormatter {
-    final private static String[] CORE      = { "CSC 210", "CSC 212", "CSC 413", "CSC 415",
-            "CSC 510", "CSC 600", "CSC 648" };
-    final private static String[] ELECTIVES = { "CSC 520", "CSC 631" };
+    final private static String[] CORE      = { "MATH 226", "MATH 227", "MATH 324", "MATH 325",
+            "PHYS 220", "PHYS 230", "BIOL 100", "BIOL 210", "CSC 210", "CSC 220", "CSC 230",
+            "CSC 256", "CSC 300GW", "CSC 340", "CSC 413", "CSC 415", "CSC 510", "CSC 600", "CSC 648" };
+    final private static String[] ELECTIVES = { "CSC 520", "CSC 615", "CSC 620", "CSC 621",
+            "CSC 630", "CSC 631", "CSC 637", "CSC 639", "CSC 641", "CSC 642", "CSC 644", "CSC 645",
+            "CSC 648", "CSC 650", "CSC 651", "CSC 656", "CSC 658", "CSC 665", "CSC 667", "CSC 668",
+            "CSC 675", "CSC 690", "CSC 693", "CSC 694", "CSC 695", "CSC 697", "CSC 699" };
 
 
     private static String formatSemester(String semester) {
@@ -48,7 +52,7 @@ public class HtmlFormatter {
         return html;
     }
 
-    private static String generateClassList(Student student, String heading, String[] classes) {
+    private static String generateClassList(Student student, String heading, String[] classes, boolean showMissing) {
         String html = "";
         html += "<h4>" + heading + "</h4>\n";
         html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp\">\n";
@@ -61,6 +65,13 @@ public class HtmlFormatter {
         for (String clazz : classes) {
             Course course = student.requirementFor(clazz);
             if (course == null) {
+                if (showMissing) {
+                    html += "<tr>\n";
+                    html += "<th class=\"mdl-data-table__cell--non-numeric\">" + clazz + "</th>\n";
+                    html += "<th class=\"mdl-data-table__cell--non-numeric\"></th>\n";
+                    html += "<th class=\"mdl-data-table__cell--non-numeric\"></th>\n";
+                    html += "</tr>\n";
+                }
                 continue;
             }
             html += "<tr>\n";
@@ -84,8 +95,8 @@ public class HtmlFormatter {
         html += "<h5>" + student.name + " (" + student.id + ") &lt;<a href=\"mailto:";
         html += student.email + "\">" + student.email + "</a>&gt;</h5>\n";
 
-        html += generateClassList(student, "Core", CORE);
-        html += generateClassList(student, "Electives", ELECTIVES);
+        html += generateClassList(student, "Core", CORE, true);
+        html += generateClassList(student, "Electives", ELECTIVES, false);
         return html;
     }
 }
