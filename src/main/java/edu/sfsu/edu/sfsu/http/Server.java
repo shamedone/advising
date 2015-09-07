@@ -47,7 +47,6 @@ public class Server implements Container {
     }
 
     public void stop() {
-        campusDb.close();
         try {
             connection.close();
         } catch (IOException ex) {

@@ -12,54 +12,60 @@ public class CommentDB extends DB {
     final static private String KEY_COMMENT = "COMMENT";
 
 
-    public CommentDB(String url, String user, String passwd) {
-        super(url, user, passwd);
-        if (isConnected()) {
-            try {
-                setupDB();
-            } catch (SQLException e) {
-                close();
-            }
-        }
+    public CommentDB(String driver, String url, String user, String passwd) {
+        super(driver, url, user, passwd);
+        setupDB();
     }
 
-    private void setupDB() throws SQLException {
-        Connection connection = getConnection();
+    private void setupDB() {
+        Connection connection = null;
         boolean hasDB = false;
-        ResultSet resultSet = connection.getMetaData().getCatalogs();
-        while (resultSet.next()) {
-            String databaseName = resultSet.getString(1);
-            if (databaseName.equals(DB_NAME)) {
-                hasDB = true;
-                break;
+        try {
+            connection = getConnection();
+            ResultSet resultSet = connection.getMetaData().getCatalogs();
+            while (resultSet.next()) {
+                String databaseName = resultSet.getString(1);
+                if (databaseName.equals(DB_NAME)) {
+                    hasDB = true;
+                    break;
+                }
             }
-        }
-        resultSet.close();
+            resultSet.close();
 
-        if (!hasDB) {
-            Statement stmt = connection.createStatement();
-            if (stmt == null) {
-                System.out.println("Couldn't create statement");
-                close();
-                return;
+            if (!hasDB) {
+                Statement stmt = connection.createStatement();
+                if (stmt == null) {
+                    System.out.println("Couldn't create statement");
+                    connection.close();
+                    return;
+                }
+                String sql = "CREATE DATABASE " + DB_NAME;
+                stmt.executeUpdate(sql);
+                stmt.close();
             }
-            String sql = "CREATE DATABASE " + DB_NAME;
-            stmt.executeUpdate(sql);
+            connection.setCatalog(DB_NAME);
+            String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + KEY_STUDENT_ID
+                    + " VARCHAR(11) NOT NULL, " + KEY_COURSE + " VARCHAR(18) NOT NULL, " + KEY_COMMENT
+                    + " TEXT NOT NULL)";
+            Statement stmt = connection.createStatement();
+            stmt.execute(sql);
             stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
         }
-        connection.setCatalog(DB_NAME);
-        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + KEY_STUDENT_ID
-                + " VARCHAR(11) NOT NULL, " + KEY_COURSE + " VARCHAR(18) NOT NULL, " + KEY_COMMENT
-                + " TEXT NOT NULL)";
-        Statement stmt = connection.createStatement();
-        stmt.execute(sql);
-        stmt.close();
-        close();
     }
 
     public void getComments(Student student) {
+        Connection connection = null;
         try {
-            Connection connection = getConnection();
+            connection = getConnection();
             connection.setCatalog(DB_NAME);
             String query = "select * from " + TABLE_NAME + " where " + KEY_STUDENT_ID + " = ?";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -73,15 +79,22 @@ public class CommentDB extends DB {
             }
             rs.close();
             ps.close();
-            close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
         }
     }
 
     public void updateComment(String id, String course, String comment) {
+        Connection connection = null;
         try {
-            Connection connection = getConnection();
+            connection = getConnection();
             connection.setCatalog(DB_NAME);
             String query = "select * from " + TABLE_NAME + " where " + KEY_STUDENT_ID + " = ? and " +
                     KEY_COURSE + " = ?";
@@ -112,9 +125,15 @@ public class CommentDB extends DB {
                 ps.executeUpdate();
                 ps.close();
             }
-            close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
         }
     }
 }

@@ -4,14 +4,15 @@ import java.sql.*;
 
 public class CampusDB extends DB {
 
-    public CampusDB(String url, String user, String passwd) {
-        super(url, user, passwd);
+    public CampusDB(String driver, String url, String user, String passwd) {
+        super(driver, url, user, passwd);
     }
 
     public Student getStudent(String id) {
         Student student = new Student(id);
-        Connection connection = getConnection();
+        Connection connection = null;
         try {
+            connection = getConnection();
             // Courses taken at SFSU
             String query = "select * from CMSCOMMON.SFO_CR_MAIN_MV where emplid = ?";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -53,8 +54,14 @@ public class CampusDB extends DB {
             ps.close();
         } catch (SQLException e) {
             return null;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
         }
-        close();
         return student.courses.size() == 0 ? null : student;
     }
 }

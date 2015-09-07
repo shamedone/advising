@@ -1,55 +1,24 @@
 package edu.sfsu.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import org.apache.commons.dbcp.BasicDataSource;
 
 public class DB {
 
-    private String     url;
-    private String     user;
-    private String     passwd;
-
-    private Connection connection;
+    private BasicDataSource dataSource;
 
 
-    public DB(String url, String user, String passwd) {
-        this.url = url;
-        this.user = user;
-        this.passwd = passwd;
-        connection = null;
+    public DB(String driver, String url, String user, String passwd) {
+        dataSource = new BasicDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUsername(user);
+        dataSource.setPassword(passwd);
+        dataSource.setUrl(url);
     }
 
-    protected Connection getConnection() {
-        if (isConnected()) {
-            return connection;
-        }
-
-        try {
-            connection = DriverManager.getConnection(url, user, passwd);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Do nothing
-        }
-        return connection;
-    }
-
-    public boolean isConnected() {
-        try {
-            return connection != null && !connection.isClosed();
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    public void close() {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            // Do nothing
-        }
-        connection = null;
+    protected Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 }
