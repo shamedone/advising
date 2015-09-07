@@ -1,7 +1,7 @@
 package edu.sfsu.edu.sfsu.http;
 
 import edu.sfsu.HtmlFormatter;
-import edu.sfsu.db.Course;
+import edu.sfsu.db.CommentDB;
 import edu.sfsu.db.Student;
 import org.apache.commons.io.IOUtils;
 import org.simpleframework.http.Request;
@@ -15,7 +15,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import edu.sfsu.db.DB;
+import edu.sfsu.db.CampusDB;
 
 public class Server implements Container {
 
@@ -24,11 +24,13 @@ public class Server implements Container {
 
     private Connection          connection;
 
-    private DB                  db;
+    private CampusDB            campusDb;
+    private CommentDB           commentDb;
 
 
-    public Server(DB db) {
-        this.db = db;
+    public Server(CampusDB campusDb, CommentDB commentDb) {
+        this.campusDb = campusDb;
+        this.commentDb = commentDb;
     }
 
     public void start() {
@@ -45,7 +47,7 @@ public class Server implements Container {
     }
 
     public void stop() {
-        db.close();
+        campusDb.close();
         try {
             connection.close();
         } catch (IOException ex) {
@@ -70,9 +72,14 @@ public class Server implements Container {
             } else if (path.endsWith(".js")) {
                 response.setContentType("application/javascript");
                 sendFile(response, path);
-            } else if (path.startsWith("/student-")) {
-                String id = path.substring("/student-".length());
-                processStudentRequest(response, id);
+            } else if (path.equals("/lookup-student")) {
+                String id = request.getParameter("id");
+                processLookupStudent(response, id);
+            } else if (path.equals("/update-comment")) {
+                String id = request.getParameter("id");
+                String course = request.getParameter("course");
+                String comment = request.getParameter("comment");
+                processUpdateComment(response, id, course, comment);
             } else {
                 System.out.println("Not serving " + path);
                 response.setCode(404);
@@ -96,12 +103,13 @@ public class Server implements Container {
         IOUtils.copy(in, out);
     }
 
-    private void processStudentRequest(Response response, String id) throws IOException {
+    private void processLookupStudent(Response response, String id) throws IOException {
         response.setContentType("text/html");
         response.setCode(200);
-        Student student = db.getStudent(id);
+        Student student = campusDb.getStudent(id);
         String html;
         if (student != null) {
+            commentDb.getComments(student);
             html = HtmlFormatter.generateHtml(student);
         } else {
             html = "<b>Student not found</b>";
@@ -109,5 +117,11 @@ public class Server implements Container {
         OutputStream out = response.getOutputStream();
         out.write(html.getBytes());
         out.close();
+    }
+
+    private void processUpdateComment(Response response, String id, String course, String comment) {
+        response.setContentType("text/plain");
+        response.setCode(200);
+        commentDb.updateComment(id, course, comment);
     }
 }

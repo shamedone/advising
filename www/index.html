@@ -22,6 +22,9 @@
       margin-bottom: 40px;
       z-index: 900;
     }
+      .mdl-data-table td {
+        vertical-align: middle;
+      }
     </style>
     <script>
       function lookup_student() {
@@ -30,11 +33,18 @@
         var info = document.getElementById("student_info");
         info.style.visibility = "hidden";
         spinner.style.visibility = "visible";
-        $.post("student-" + id.value, function(data, status) {
+        $.post("lookup-student", {id: id.value}, function(data, status) {
           info.innerHTML = data;
+          componentHandler.upgradeAllRegistered();
           info.style.visibility = "visible";
           spinner.style.visibility = "hidden";
         });
+        return false;
+      }
+
+      function update_comment(id, course) {
+        var comment = document.getElementById(course).value;
+        $.post("update-comment", {id: id, course: course, comment: comment});
         return false;
       }
     </script>

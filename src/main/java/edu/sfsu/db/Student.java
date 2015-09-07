@@ -1,7 +1,9 @@
 package edu.sfsu.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Student {
 
@@ -10,13 +12,15 @@ public class Student {
         name = "";
         email = "";
         courses = new ArrayList<>();
+        comments = new HashMap<>();
     }
 
 
-    public String       id;
-    public String       name;
-    public String       email;
-    public List<Course> courses;
+    public String              id;
+    public String              name;
+    public String              email;
+    public List<Course>        courses;
+    public Map<String, String> comments;
 
 
     public Course requirementFor(String courseName) {

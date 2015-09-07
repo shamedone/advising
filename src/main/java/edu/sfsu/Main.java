@@ -1,15 +1,18 @@
 package edu.sfsu;
 
-import edu.sfsu.db.Course;
-import edu.sfsu.db.DB;
-import edu.sfsu.db.Student;
+import edu.sfsu.db.CampusDB;
+import edu.sfsu.db.CommentDB;
 import edu.sfsu.edu.sfsu.http.Server;
 
 public class Main {
 
-    final private static String URL      = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
-    final private static String USERNAME = "AASCIAPT";
-    final private static String PASSWD   = "welcome1$";
+    final private static String CAMPUS_URL       = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
+    final private static String CAMPUS_USERNAME  = "AASCIAPT";
+    final private static String CAMPUS_PASSWD    = "welcome1$";
+
+    final private static String COMMENT_URL      = "jdbc:mysql://localhost:3307/";
+    final private static String COMMENT_USERNAME = "root";
+    final private static String COMMENT_PASSWD   = "AjgUvl0Y";
 
 
     public static void main(String[] argv) {
@@ -21,13 +24,26 @@ public class Main {
             return;
         }
 
-        DB db = new DB(URL, USERNAME, PASSWD);
-        if (!db.isConnected()) {
-            System.out.println("Connection failed!");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("MySQL JDBC Driver missing");
             return;
         }
 
-        Server server = new Server(db);
+        CommentDB commentDb = new CommentDB(COMMENT_URL, COMMENT_USERNAME, COMMENT_PASSWD);
+        if (!commentDb.isConnected()) {
+            System.out.println("Connection to CommentDB failed!");
+            return;
+        }
+
+        CampusDB campusDb = new CampusDB(CAMPUS_URL, CAMPUS_USERNAME, CAMPUS_PASSWD);
+        if (!campusDb.isConnected()) {
+            System.out.println("Connection to CampusDB failed!");
+            return;
+        }
+
+        Server server = new Server(campusDb, commentDb);
         server.start();
     }
 
