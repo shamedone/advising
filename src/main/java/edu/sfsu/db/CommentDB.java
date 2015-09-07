@@ -1,18 +1,15 @@
 package edu.sfsu.db;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class CommentDB extends DB {
 
-    final static private String DB_NAME        = "ADVISING";
-    final static private String TABLE_NAME     = "COMMENTS";
+    final static private String DB_NAME = "ADVISING";
+    final static private String TABLE_NAME = "COMMENTS";
 
     final static private String KEY_STUDENT_ID = "STUDENT_ID";
-    final static private String KEY_COURSE     = "COURSE";
-    final static private String KEY_COMMENT    = "COMMENT";
+    final static private String KEY_COURSE = "COURSE";
+    final static private String KEY_COMMENT = "COMMENT";
 
 
     public CommentDB(String url, String user, String passwd) {
@@ -27,6 +24,7 @@ public class CommentDB extends DB {
     }
 
     private void setupDB() throws SQLException {
+        Connection connection = getConnection();
         boolean hasDB = false;
         ResultSet resultSet = connection.getMetaData().getCatalogs();
         while (resultSet.next()) {
@@ -56,11 +54,14 @@ public class CommentDB extends DB {
         Statement stmt = connection.createStatement();
         stmt.execute(sql);
         stmt.close();
+        close();
     }
 
     public void getComments(Student student) {
-        String query = "select * from " + TABLE_NAME + " where " + KEY_STUDENT_ID + " = ?";
         try {
+            Connection connection = getConnection();
+            connection.setCatalog(DB_NAME);
+            String query = "select * from " + TABLE_NAME + " where " + KEY_STUDENT_ID + " = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, student.id);
             ResultSet rs = ps.executeQuery();
@@ -72,6 +73,7 @@ public class CommentDB extends DB {
             }
             rs.close();
             ps.close();
+            close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,6 +81,8 @@ public class CommentDB extends DB {
 
     public void updateComment(String id, String course, String comment) {
         try {
+            Connection connection = getConnection();
+            connection.setCatalog(DB_NAME);
             String query = "select * from " + TABLE_NAME + " where " + KEY_STUDENT_ID + " = ? and " +
                     KEY_COURSE + " = ?";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -108,6 +112,7 @@ public class CommentDB extends DB {
                 ps.executeUpdate();
                 ps.close();
             }
+            close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

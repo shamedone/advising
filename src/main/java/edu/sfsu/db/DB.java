@@ -6,11 +6,24 @@ import java.sql.SQLException;
 
 public class DB {
 
-    protected Connection connection;
+    private String     url;
+    private String     user;
+    private String     passwd;
+
+    private Connection connection;
 
 
     public DB(String url, String user, String passwd) {
+        this.url = url;
+        this.user = user;
+        this.passwd = passwd;
         connection = null;
+    }
+
+    protected Connection getConnection() {
+        if (isConnected()) {
+            return connection;
+        }
 
         try {
             connection = DriverManager.getConnection(url, user, passwd);
@@ -18,6 +31,7 @@ public class DB {
             e.printStackTrace();
             // Do nothing
         }
+        return connection;
     }
 
     public boolean isConnected() {

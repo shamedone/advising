@@ -10,6 +10,7 @@ public class CampusDB extends DB {
 
     public Student getStudent(String id) {
         Student student = new Student(id);
+        Connection connection = getConnection();
         try {
             // Courses taken at SFSU
             String query = "select * from CMSCOMMON.SFO_CR_MAIN_MV where emplid = ?";
@@ -53,6 +54,7 @@ public class CampusDB extends DB {
         } catch (SQLException e) {
             return null;
         }
+        close();
         return student.courses.size() == 0 ? null : student;
     }
 }

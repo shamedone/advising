@@ -40,16 +40,7 @@ public class Main {
         }
 
         CommentDB commentDb = new CommentDB(COMMENT_URL, COMMENT_USERNAME, COMMENT_PASSWD);
-        if (!commentDb.isConnected()) {
-            System.out.println("Connection to CommentDB failed!");
-            return;
-        }
-
         CampusDB campusDb = new CampusDB(CAMPUS_URL, CAMPUS_USERNAME, CAMPUS_PASSWD);
-        if (!campusDb.isConnected()) {
-            System.out.println("Connection to CampusDB failed!");
-            return;
-        }
 
         Server server = new Server(campusDb, commentDb);
         server.start();
