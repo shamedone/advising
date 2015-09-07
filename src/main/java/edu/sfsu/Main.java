@@ -10,9 +10,17 @@ public class Main {
     final private static String CAMPUS_USERNAME  = "AASCIAPT";
     final private static String CAMPUS_PASSWD    = "welcome1$";
 
+    /**
+     * <pre>
+     *     mysql -u root -p
+     *     CREATE USER 'advisor'@'localhost' IDENTIFIED BY 'd4yY76s0wM1';
+     *     GRANT ALL PRIVILEGES ON * . * TO 'advisor'@'localhost';
+     *     FLUSH PRIVILEGES;
+     * </pre>
+     */
     final private static String COMMENT_URL      = "jdbc:mysql://localhost:3307/";
-    final private static String COMMENT_USERNAME = "root";
-    final private static String COMMENT_PASSWD   = "AjgUvl0Y";
+    final private static String COMMENT_USERNAME = "advisor";
+    final private static String COMMENT_PASSWD   = "d4yY76s0wM1";
 
 
     public static void main(String[] argv) {
