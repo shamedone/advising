@@ -27,24 +27,41 @@
       }
     </style>
     <script>
+      var spinner_count = 0;
+
+      function show_spinner() {
+        spinner_count++;
+        if (spinner_count == 1) {
+          $("#spinner").addClass("is-active");
+        }
+      }
+
+      function hide_spinner() {
+        spinner_count--;
+        if (spinner_count == 0) {
+          $("#spinner").removeClass("is-active");
+        }
+      }
       function lookup_student() {
         var id = document.getElementById("student_id");
-        var spinner = document.getElementById("spinner");
         var info = document.getElementById("student_info");
         info.style.visibility = "hidden";
-        spinner.style.visibility = "visible";
+        show_spinner();
         $.post("lookup-student", {id: id.value}, function(data, status) {
           info.innerHTML = data;
           componentHandler.upgradeAllRegistered();
           info.style.visibility = "visible";
-          spinner.style.visibility = "hidden";
+          hide_spinner();
         });
         return false;
       }
 
       function update_comment(id, course) {
         var comment = document.getElementById(course).value;
-        $.post("update-comment", {id: id, course: course, comment: comment});
+        show_spinner();
+        $.post("update-comment", {id: id, course: course, comment: comment}, function(data, status) {
+          hide_spinner();
+        });
         return false;
       }
     </script>
@@ -63,6 +80,7 @@
           <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
           <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
             <h3>Senior Advising</h3>
+              <div id="spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" style="float: right"></div>
               <form onsubmit="return lookup_student();">
                 <div class="mdl-textfield mdl-js-textfield">
                   <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
@@ -70,7 +88,6 @@
                   <span class="mdl-textfield__error">Input is not a student ID!</span>
                 </div>
               </form>
-            <div id="spinner" style="visibility: hidden" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
             <div id="student_info"></div>
           </div>
         </div>
