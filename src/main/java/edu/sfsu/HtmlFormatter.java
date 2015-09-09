@@ -86,7 +86,7 @@ public class HtmlFormatter {
         html += "</thead>\n";
         html += "<tbody>\n";
         for (String clazz : classes) {
-            Course course = student.requirementFor(clazz, !showMissing);
+            Course course = student.requirementFor(clazz);
             if (course == null) {
                 if (showMissing) {
                     html += "<tr>\n";

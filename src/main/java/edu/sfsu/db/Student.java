@@ -23,19 +23,22 @@ public class Student {
     public Map<String, String> comments;
 
 
-    public Course requirementFor(String courseName, boolean allowWIP) {
+    public Course requirementFor(String courseName) {
+        Course wip = null;
         for (Course course : courses) {
             if (course.courseName.equals(courseName)) {
                 if (course.grade.equals("F") || course.grade.equals("CR")
                         || course.grade.equals("W")) {
                     continue;
                 }
-                if (course.grade.equals("") && !allowWIP) {
-                    continue;
+                if (course.grade.equals("")) {
+                     // Course taken this semester
+                     wip = course;
+                     continue;
                 }
                 return course;
             }
         }
-        return null;
+        return wip;
     }
 }
