@@ -23,11 +23,14 @@ public class Student {
     public Map<String, String> comments;
 
 
-    public Course requirementFor(String courseName) {
+    public Course requirementFor(String courseName, boolean allowWIP) {
         for (Course course : courses) {
             if (course.courseName.equals(courseName)) {
                 if (course.grade.equals("F") || course.grade.equals("CR")
-                        || course.grade.equals("W") || course.grade.equals("")) {
+                        || course.grade.equals("W")) {
+                    continue;
+                }
+                if (course.grade.equals("") && !allowWIP) {
                     continue;
                 }
                 return course;
