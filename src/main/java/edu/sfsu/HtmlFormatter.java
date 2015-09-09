@@ -10,7 +10,7 @@ public class HtmlFormatter {
             "CSC 648"                      };
     final private static String[] ELECTIVES = { "CSC 520", "CSC 615", "CSC 620", "CSC 621",
             "CSC 630", "CSC 631", "CSC 637", "CSC 639", "CSC 641", "CSC 642", "CSC 644", "CSC 645",
-            "CSC 648", "CSC 650", "CSC 651", "CSC 656", "CSC 658", "CSC 665", "CSC 667", "CSC 668",
+            "CSC 650", "CSC 651", "CSC 656", "CSC 658", "CSC 665", "CSC 667", "CSC 668",
             "CSC 675", "CSC 690", "CSC 693", "CSC 694", "CSC 695", "CSC 697", "CSC 699" };
 
 
