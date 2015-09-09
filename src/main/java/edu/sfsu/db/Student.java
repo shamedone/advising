@@ -27,7 +27,7 @@ public class Student {
         for (Course course : courses) {
             if (course.courseName.equals(courseName)) {
                 if (course.grade.equals("F") || course.grade.equals("CR")
-                        || course.grade.equals("")) {
+                        || course.grade.equals("W") || course.grade.equals("")) {
                     continue;
                 }
                 return course;
