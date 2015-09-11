@@ -10,8 +10,19 @@ public class HtmlFormatter {
             "CSC 648"                      };
     final private static String[] ELECTIVES = { "CSC 520", "CSC 615", "CSC 620", "CSC 621",
             "CSC 630", "CSC 631", "CSC 637", "CSC 639", "CSC 641", "CSC 642", "CSC 644", "CSC 645",
-            "CSC 650", "CSC 651", "CSC 656", "CSC 658", "CSC 665", "CSC 667", "CSC 668",
-            "CSC 675", "CSC 690", "CSC 693", "CSC 694", "CSC 695", "CSC 697", "CSC 699" };
+            "CSC 650", "CSC 651", "CSC 656", "CSC 658", "CSC 665", "CSC 667", "CSC 668", "CSC 675",
+            "CSC 690", "CSC 693",
+            "CSC 694",
+            "CSC 695",
+            "CSC 697",
+            "CSC 699",
+            // Graduate courses
+            "CSC 720", "CSC 730", "CSC 737", "CSC 745", "CSC 746", "CSC 775", "CSC 780", "CSC 810",
+            "CSC 815", "CSC 820", "CSC 821", "CSC 825", "CSC 830", "CSC 831", "CSC 835", "CSC 837",
+            "CSC 840", "CSC 841", "CSC 842", "CSC 845", "CSC 846", "CSC 848", "CSC 849", "CSC 850",
+            "CSC 856", "CSC 857", "CSC 858", "CSC 864", "CSC 865", "CSC 867", "CSC 868", "CSC 869",
+            "CSC 870", "CSC 871", "CSC 872", "CSC 875", "CSC 878", "CSC 890", "CSC 893", "CSC 895",
+            "CSC 897", "CSC 898", "CSC 899" };
 
 
     private static String formatSemester(String semester) {
@@ -56,8 +67,7 @@ public class HtmlFormatter {
     private static String generateCommentField(Student student, String courseName) {
         String id = courseName.replace(" ", "_");
         String html = "<td class=\"mdl-data-table__cell--non-numeric\">\n";
-        html += "<form onsubmit=\"return update_comment('" + student.id + "', '" + id
-                + "');\">\n";
+        html += "<form onsubmit=\"return update_comment('" + student.id + "', '" + id + "');\">\n";
         html += "<div class=\"mdl-textfield mdl-js-textfield\">\n";
         html += "<input class=\"mdl-textfield__input\" type=\"text\" id=\"" + id + "\"";
         if (student.comments.containsKey(id)) {
