@@ -11,6 +11,7 @@ public class Student {
 
     static {
         PASSING_GRADES = new ArrayList<>();
+        PASSING_GRADES.add("");
         PASSING_GRADES.add("A");
         PASSING_GRADES.add("A-");
         PASSING_GRADES.add("B+");
