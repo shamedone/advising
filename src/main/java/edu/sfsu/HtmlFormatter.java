@@ -61,7 +61,7 @@ public class HtmlFormatter {
         return html;
     }
 
-    private static String generateClassList(Student student, String heading, String[] classes,
+    private static String generateClassList(Student student, String heading, Object[] classes,
             boolean showMissing) {
         String html = "";
         html += "<h4>" + heading + "</h4>\n";
@@ -75,21 +75,24 @@ public class HtmlFormatter {
         html += "</tr>\n";
         html += "</thead>\n";
         html += "<tbody>\n";
-        for (String clazz : classes) {
+        for (Object clazz : classes) {
             Course course = student.requirementFor(clazz);
             if (course == null) {
                 if (showMissing) {
+                    String courseName = clazz instanceof String ? (String) clazz
+                            : ((String[]) clazz)[0];
                     html += "<tr>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\">" + clazz + "</td>\n";
+                    html += "<td class=\"mdl-data-table__cell--non-numeric\">" + courseName
+                            + "</td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
-                    html += generateCommentField(student, clazz);
+                    html += generateCommentField(student, courseName);
                     html += "</tr>\n";
                 }
                 continue;
             }
             html += "<tr>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + clazz;
+            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.courseName;
             if (course.transferred) {
                 html += " (T)";
             }
