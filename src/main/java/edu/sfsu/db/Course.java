@@ -6,11 +6,12 @@ import java.util.List;
 public class Course {
     public String                     courseName;
     public String                     semester;
-    public boolean                    transferred;
+    public String                     transferSchool;
+    public String                     transferCourse;
     public String                     grade;
 
-    final private static String[]     BIOLOGY_CORE = { "BIOL 100", "BIOL 176", "BIOL 210",
-            "CHEM 115"                            };
+    final private static String[]     BIOLOGY_CORE = { "BIOL 100", "BIOL 101", "BIOL 176",
+            "BIOL 210", "CHEM 115"                };
 
     final public static Object[]      CORE         = { "MATH 226", "MATH 227", "MATH 324",
             "MATH 325", "PHYS 220", "PHYS 222", "PHYS 230", "PHYS 232", BIOLOGY_CORE, "CSC 210",

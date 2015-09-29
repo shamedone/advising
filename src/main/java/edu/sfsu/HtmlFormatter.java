@@ -5,45 +5,6 @@ import edu.sfsu.db.Course;
 
 public class HtmlFormatter {
 
-    private static String formatSemester(String semester) {
-        if (semester.length() != 4) {
-            return "-";
-        }
-        String year;
-        char firstDigit = semester.charAt(0);
-        switch (firstDigit) {
-        case '1':
-            year = "19";
-            break;
-        case '2':
-            year = "20";
-            break;
-        default:
-            return "-";
-        }
-        String html;
-        year += semester.substring(1, 3);
-        char lastDigit = semester.charAt(3);
-        switch (lastDigit) {
-        case '1':
-            html = "Winter";
-            break;
-        case '3':
-            html = "Spring";
-            break;
-        case '5':
-            html = "Summer";
-            break;
-        case '7':
-            html = "Fall";
-            break;
-        default:
-            return "-";
-        }
-        html += " " + year;
-        return html;
-    }
-
     private static String generateCommentField(Student student, String courseName) {
         String id = courseName.replace(" ", "_");
         String html = "<td class=\"mdl-data-table__cell--non-numeric\">\n";
@@ -69,6 +30,7 @@ public class HtmlFormatter {
         html += "<thead>\n";
         html += "<tr>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Course</th>\n";
+        html += "<th class=\"mdl-data-table__cell--non-numeric\">Transfer</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Semester</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Grade</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Comment</th>\n";
@@ -86,6 +48,7 @@ public class HtmlFormatter {
                             + "</td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
+                    html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
                     html += generateCommentField(student, courseName);
                     html += "</tr>\n";
                 }
@@ -93,12 +56,14 @@ public class HtmlFormatter {
             }
             html += "<tr>\n";
             html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.courseName;
-            if (course.transferred) {
-                html += " (T)";
+            html += "</td>\n";
+            html += "<td class=\"mdl-data-table__cell--non-numeric\">";
+            if (course.transferCourse != null && course.transferSchool != null) {
+                html += course.transferCourse + " (" + course.transferSchool + ")";
             }
             html += "</td>\n";
             html += "<td class=\"mdl-data-table__cell--non-numeric\">"
-                    + formatSemester(course.semester) + "</td>\n";
+                    + course.semester + "</td>\n";
             html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.grade + "</td>\n";
             html += generateCommentField(student, course.courseName);
             html += "</tr>\n";
