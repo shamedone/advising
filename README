@@ -1,0 +1,11 @@
+
+For debugging, set the following environment variable:
+
+export GRADLE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1099"
+
+then run:
+
+./gradlew jettyRunWar
+
+then use the JettyDebug configuration in the IDE.
+

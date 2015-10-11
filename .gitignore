@@ -6,6 +6,7 @@
 .externalToolBuilders
 .gradle
 .idea/libraries/
+.idea/artifacts/
 .idea/inspectionProfiles/
 .idea/workspace.xml
 .idea/tasks.xml
