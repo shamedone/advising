@@ -1,7 +1,7 @@
 package edu.sfsu;
 
-import edu.sfsu.db.Student;
 import edu.sfsu.db.Course;
+import edu.sfsu.db.Student;
 
 public class HtmlFormatter {
 

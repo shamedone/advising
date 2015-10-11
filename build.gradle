@@ -1,18 +1,39 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
 
-apply plugin: 'java'
-apply plugin: 'application'
+/*
+allprojects {
+    sourceCompatibility = 1.7
+}
+*/
 
-mainClassName = "edu.sfsu.Main"
-sourceCompatibility = 1.8
+/*
+[jettyRun, jettyRunWar]*.with {
+    reload='automatic'
+    //jettyEnvXml = file('etc/jetty-env.xml')
+    jettyConfig= file('etc/jetty-config.xml')
+    additionalRuntimeJars = sourceSets.main.runtimeClasspath
+}
+*/
 
 repositories {
+    flatDir { dirs 'libs' }
     jcenter()
 }
 
 dependencies {
+    compile group: 'log4j', name: 'log4j', version: '1.2.15', ext: 'jar'
+    providedCompile 'javax.servlet:servlet-api:2.5'
     compile 'mysql:mysql-connector-java:5.1.6'
     compile 'org.apache.commons:commons-dbcp2:2.0'
-    compile 'org.simpleframework:simple-http:6.+'
     compile 'commons-io:commons-io:2.4'
-    compile files('libs/ojdbc6.jar')
 }
+
+war {
+    classpath fileTree('libs')
+    webXml = file('src/web.xml')
+}
+
+httpPort = 8080
+stopPort = 9451
+stopKey = 'foo'
