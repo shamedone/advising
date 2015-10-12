@@ -12,4 +12,14 @@
         <servlet-name>AdvisingServlet</servlet-name>
         <url-pattern>/lookup-student</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdvisingServlet</servlet-name>
+        <url-pattern>/update-comment</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdvisingServlet</servlet-name>
+        <url-pattern>/update-checkpoints</url-pattern>
+    </servlet-mapping>
 </web-app>

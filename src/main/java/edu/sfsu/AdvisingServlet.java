@@ -2,6 +2,7 @@ package edu.sfsu;
 
 import edu.sfsu.HtmlFormatter;
 import edu.sfsu.db.CampusDB;
+import edu.sfsu.db.CheckpointDB;
 import edu.sfsu.db.CommentDB;
 import edu.sfsu.db.Student;
 
@@ -17,10 +18,10 @@ import javax.servlet.http.*;
 
 public class AdvisingServlet extends HttpServlet {
 
-    final private static String CAMPUS_DRIVER    = "oracle.jdbc.driver.OracleDriver";
-    final private static String CAMPUS_URL       = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
-    final private static String CAMPUS_USERNAME  = "AASCIAPT";
-    final private static String CAMPUS_PASSWD    = "welcome1$";
+    final private static String CAMPUS_DRIVER       = "oracle.jdbc.driver.OracleDriver";
+    final private static String CAMPUS_URL          = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
+    final private static String CAMPUS_USERNAME     = "AASCIAPT";
+    final private static String CAMPUS_PASSWD       = "welcome1$";
 
     /**
      * <pre>
@@ -30,12 +31,18 @@ public class AdvisingServlet extends HttpServlet {
      *     FLUSH PRIVILEGES;
      * </pre>
      */
-    final private static String COMMENT_DRIVER   = "com.mysql.jdbc.Driver";
-    final private static String COMMENT_URL      = "jdbc:mysql://localhost:3307/";
-    final private static String COMMENT_USERNAME = "advisor";
-    final private static String COMMENT_PASSWD   = "d4yY76s0wM1";
+    final private static String COMMENT_DRIVER      = "com.mysql.jdbc.Driver";
+    final private static String COMMENT_URL         = "jdbc:mysql://localhost:3307/";
+    final private static String COMMENT_USERNAME    = "advisor";
+    final private static String COMMENT_PASSWD      = "d4yY76s0wM1";
+
+    final private static String CHECKPOINT_DRIVER   = "com.mysql.jdbc.Driver";
+    final private static String CHECKPOINT_URL      = "jdbc:mysql://localhost:3307/";
+    final private static String CHECKPOINT_USERNAME = "advisor";
+    final private static String CHECKPOINT_PASSWD   = "d4yY76s0wM1";
 
     private CommentDB           commentDB;
+    private CheckpointDB        checkpointDB;
     private CampusDB            campusDB;
 
 
@@ -56,8 +63,9 @@ public class AdvisingServlet extends HttpServlet {
         }
 
         commentDB = new CommentDB(COMMENT_DRIVER, COMMENT_URL, COMMENT_USERNAME, COMMENT_PASSWD);
+        checkpointDB = new CheckpointDB(CHECKPOINT_DRIVER, CHECKPOINT_URL, CHECKPOINT_USERNAME,
+                CHECKPOINT_PASSWD);
         campusDB = new CampusDB(CAMPUS_DRIVER, CAMPUS_URL, CAMPUS_USERNAME, CAMPUS_PASSWD);
-
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -76,9 +84,17 @@ public class AdvisingServlet extends HttpServlet {
             String id = request.getParameter("id");
             String course = request.getParameter("course");
             String comment = request.getParameter("comment");
-            processUpdateComment(out, id, course, comment);
+            processUpdateComment(id, course, comment);
         }
 
+        if (path.equals("/update-checkpoints")) {
+            String id = request.getParameter("id");
+            String checkpointOralPresentation = request.getParameter("checkpointOralPresentation");
+            String checkpointAdvising413 = request.getParameter("checkpointAdvising413");
+            String checkpointSubmittedAppl = request.getParameter("checkpointSubmittedAppl");
+            processUpdateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
+                    checkpointSubmittedAppl);
+        }
         out.close();
     }
 
@@ -92,6 +108,7 @@ public class AdvisingServlet extends HttpServlet {
         String html;
         if (student != null) {
             commentDB.getComments(student);
+            checkpointDB.getCheckpoints(student);
             html = HtmlFormatter.generateHtml(student);
         } else {
             html = "<b>Student not found</b>";
@@ -99,7 +116,13 @@ public class AdvisingServlet extends HttpServlet {
         out.println(html);
     }
 
-    private void processUpdateComment(PrintWriter out, String id, String course, String comment) {
+    private void processUpdateComment(String id, String course, String comment) {
         commentDB.updateComment(id, course, comment);
+    }
+
+    private void processUpdateCheckpoints(String id, String checkpointOralPresentation,
+            String checkpointAdvising413, String checkpointSubmittedApplication) {
+        checkpointDB.updateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
+                checkpointSubmittedApplication);
     }
 }

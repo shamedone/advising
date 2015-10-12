@@ -12,6 +12,9 @@ public class CampusDB extends DB {
     }
 
     public Student getStudent(String id) {
+        if (id.equals("0")) {
+            return new DummyStudent(id);
+        }
         Student student = new Student(id);
         Connection connection = null;
         try {

@@ -47,6 +47,7 @@
         box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
       }
     </style>
+    <script src="date.format.js" type="application/javascript"></script>
     <script>
       var spinner_count = 0;
 
@@ -63,6 +64,11 @@
           $("#spinner").removeClass("is-active");
         }
       }
+
+      function show_toast() {
+        $('.toast').fadeIn(400).delay(2000).fadeOut(400);
+      }
+
       function lookup_student() {
         var id = document.getElementById("student_id");
         var info = document.getElementById("student_info");
@@ -82,9 +88,61 @@
         show_spinner();
         $.post("update-comment", {id: id, course: course, comment: comment}, function(data, status) {
           hide_spinner();
-          $('.toast').fadeIn(400).delay(2000).fadeOut(400);
+          show_toast();
         });
         return false;
+      }
+
+      function update_checkpoints(id) {
+        var checkpointOralPresentation = document.getElementById('date_oral_presentation').value;
+        var checkpointAdvising413 = document.getElementById('date_advising_413').value;
+        var checkpointSubmittedAppl = document.getElementById('date_submitted_appl').value;
+
+        var e = document.querySelector('#label_oral_presentation').MaterialSwitch;
+        if (checkpointOralPresentation !== "") {
+          e.on();
+        } else {
+          e.off();
+        }
+
+        e = document.querySelector('#label_advising_413').MaterialSwitch;
+        if (checkpointAdvising413 !== "") {
+          e.on();
+        } else {
+          e.off();
+        }
+
+        e = document.querySelector('#label_submitted_appl').MaterialSwitch;
+        if (checkpointSubmittedAppl !== "") {
+          e.on();
+        } else {
+          e.off();
+        }
+
+        show_spinner();
+        $.post("update-checkpoints", {id: id,
+          checkpointOralPresentation: checkpointOralPresentation,
+          checkpointAdvising413: checkpointAdvising413,
+          checkpointSubmittedAppl: checkpointSubmittedAppl}, function(data, status) {
+          hide_spinner();
+          show_toast();
+        });
+        return false;
+      }
+
+      function checkpoint_toggled(id, type) {
+        var isChecked = document.getElementById(type).checked;
+        var dateField = document.getElementById("date_" + type);
+        if (isChecked) {
+          var now = new Date();
+          dateField.value = now.format("mm/dd/yyyy");
+          $('#date_' + type).parent().addClass('is-dirty');
+        } else {
+          dateField.value = "";
+          $('#date_' + type).parent().removeClass('is-dirty');
+        }
+        update_checkpoints(id);
+        return true;
       }
     </script>
   </head>
@@ -111,7 +169,7 @@
                 </div>
               </form>
             <div id="student_info"></div>
-            <div class='toast' style='display:none'>Comment saved...</div>
+            <div class='toast' style='display:none'>Information saved...</div>
           </div>
         </div>
         <footer class="demo-footer mdl-mini-footer">

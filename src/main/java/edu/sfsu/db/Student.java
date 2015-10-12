@@ -19,6 +19,9 @@ public class Student {
     public String              id;
     public String              name;
     public String              email;
+    public String              checkpointOralPresentation;
+    public String              checkpointAdvising413;
+    public String              checkpointSubmittedApplication;
     public List<Course>        courses;
     public Map<String, String> comments;
 
