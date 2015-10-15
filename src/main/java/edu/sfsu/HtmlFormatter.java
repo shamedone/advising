@@ -6,13 +6,19 @@ import edu.sfsu.db.Student;
 public class HtmlFormatter {
 
     private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
-            String checkpointId) {
+            String checkpointId, boolean showDateField) {
         String html = "";
         html += "<tr>\n";
         html += "<td class=\"mdl-data-table__cell--non-numeric\">\n";
         html += "<label id=\"label_" + checkpointId
                 + "\" class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\""
-                + checkpointId + "\">\n";
+                + checkpointId + "\"";
+
+        if (!showDateField) {
+            html += " style=\"display: none;\"";
+        }
+
+        html += ">\n";
         html += "<input type=\"checkbox\" id=\"" + checkpointId + "\" class=\"mdl-switch__input\" ";
         html += "onclick=\"return checkpoint_toggled('" + studentId + "', '" + checkpointId
                 + "');\"\n";
@@ -36,7 +42,9 @@ public class HtmlFormatter {
 
         html += "/>\n";
         html += "<label class=\"mdl-textfield__label\" for=\"date_" + checkpointId
-                + "\">Date...</label>\n";
+                + "\">";
+        html += showDateField ? "Date" : "Comment";
+        html += "...</label>\n";
         html += "</div>\n";
         html += "</form>\n";
         html += "</td>\n";
@@ -51,16 +59,16 @@ public class HtmlFormatter {
         html += "<tr>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\"></th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Checkpoint</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Date</th>\n";
+        html += "<th class=\"mdl-data-table__cell--non-numeric\">Date/Comment</th>\n";
         html += "</tr>\n";
         html += "</thead>\n";
         html += "<tbody>\n";
         html += generateCheckpoint(student.id, student.checkpointOralPresentation,
-                "Senior Oral Presentation", "oral_presentation");
+                "Senior Oral Presentation", "oral_presentation", false);
         html += generateCheckpoint(student.id, student.checkpointAdvising413, "413 Advising",
-                "advising_413");
+                "advising_413", true);
         html += generateCheckpoint(student.id, student.checkpointSubmittedApplication,
-                "Submitted Graduate Application", "submitted_appl");
+                "Submitted Graduate Application", "submitted_appl", true);
         html += "</tbody>\n";
         html += "</table>\n";
         return html;
