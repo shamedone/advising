@@ -10,6 +10,11 @@
 
     <servlet-mapping>
         <servlet-name>AdvisingServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdvisingServlet</servlet-name>
         <url-pattern>/lookup-student</url-pattern>
     </servlet-mapping>
 

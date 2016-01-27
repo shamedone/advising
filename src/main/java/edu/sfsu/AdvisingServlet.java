@@ -5,6 +5,7 @@ import edu.sfsu.db.CampusDB;
 import edu.sfsu.db.CheckpointDB;
 import edu.sfsu.db.CommentDB;
 import edu.sfsu.db.Student;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,16 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.*;
-import java.util.*;
+import java.util.UUID;
 import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class AdvisingServlet extends HttpServlet {
 
-    final private static String CAMPUS_DRIVER       = "oracle.jdbc.driver.OracleDriver";
-    final private static String CAMPUS_URL          = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
-    final private static String CAMPUS_USERNAME     = "AASCIAPT";
-    final private static String CAMPUS_PASSWD       = "welcome1$";
+    final private static String TOKEN = UUID.randomUUID().toString();
+
+    final private static String PASSWORD = "cs@sfsu2016";
+
+    final private static String CAMPUS_DRIVER   = "oracle.jdbc.driver.OracleDriver";
+    final private static String CAMPUS_URL      = "jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl";
+    final private static String CAMPUS_USERNAME = "AASCIAPT";
+    final private static String CAMPUS_PASSWD   = "welcome1$";
 
     /**
      * <pre>
@@ -31,19 +35,19 @@ public class AdvisingServlet extends HttpServlet {
      *     FLUSH PRIVILEGES;
      * </pre>
      */
-    final private static String COMMENT_DRIVER      = "com.mysql.jdbc.Driver";
-    final private static String COMMENT_URL         = "jdbc:mysql://localhost:3307/";
-    final private static String COMMENT_USERNAME    = "advisor";
-    final private static String COMMENT_PASSWD      = "d4yY76s0wM1";
+    final private static String COMMENT_DRIVER   = "com.mysql.jdbc.Driver";
+    final private static String COMMENT_URL      = "jdbc:mysql://localhost:3307/";
+    final private static String COMMENT_USERNAME = "advisor";
+    final private static String COMMENT_PASSWD   = "d4yY76s0wM1";
 
     final private static String CHECKPOINT_DRIVER   = "com.mysql.jdbc.Driver";
     final private static String CHECKPOINT_URL      = "jdbc:mysql://localhost:3307/";
     final private static String CHECKPOINT_USERNAME = "advisor";
     final private static String CHECKPOINT_PASSWD   = "d4yY76s0wM1";
 
-    private CommentDB           commentDB;
-    private CheckpointDB        checkpointDB;
-    private CampusDB            campusDB;
+    private CommentDB    commentDB;
+    private CheckpointDB checkpointDB;
+    private CampusDB     campusDB;
 
 
     @Override
@@ -75,6 +79,19 @@ public class AdvisingServlet extends HttpServlet {
 
         String path = request.getServletPath();
 
+        if (path.equals("/login")) {
+            String passwd = request.getParameter("passwd");
+            processLogin(out, passwd);
+            out.close();
+            return;
+        }
+
+        String token = request.getParameter("token");
+        if (!token.equals(TOKEN)) {
+            out.close();
+            return;
+        }
+
         if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             processLookupStudent(out, id);
@@ -101,6 +118,10 @@ public class AdvisingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doPost(request, response);
+    }
+
+    private void processLogin(PrintWriter out, String passwd) {
+        out.print(passwd.equals(PASSWORD) ? TOKEN : "");
     }
 
     private void processLookupStudent(PrintWriter out, String id) throws IOException {
