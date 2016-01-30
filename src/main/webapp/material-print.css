@@ -1,0 +1,48 @@
+.mdl-data-table {
+}
+
+.mdl-js-data-table {
+}
+
+.mdl-shadow--2dp {
+}
+
+.mdl-data-table__cell--non-numeric {
+    font-size: x-small;
+}
+
+.mdl-textfield {
+}
+
+.mdl-js-textfield {
+}
+
+.mdl-textfield__input {
+    border: none;
+}
+
+.mdl-textfield__label {
+    display: none;
+}
+
+.mdl-switch__input {
+    display: none;
+}
+
+.mdl-switch {
+    display: none;
+}
+
+.mdl-js-switch {
+}
+
+.mdl-js-ripple-effect {
+}
+
+th, td {
+    padding-right: 15px;
+}
+
+.general {
+    display: none;
+}

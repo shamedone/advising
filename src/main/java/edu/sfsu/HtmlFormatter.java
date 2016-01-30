@@ -53,7 +53,8 @@ public class HtmlFormatter {
     }
 
     private static String generateGeneralSection(Student student) {
-        String html = "<h4>General</h4>\n";
+        String html = "<div class=\"general\">\n";
+        html += "<h5>General</h5>\n";
         html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp\">\n";
         html += "<thead>\n";
         html += "<tr>\n";
@@ -71,6 +72,7 @@ public class HtmlFormatter {
                 "Submitted Graduate Application", "submitted_appl", true);
         html += "</tbody>\n";
         html += "</table>\n";
+        html += "</div>\n";
         return html;
     }
 
@@ -94,7 +96,7 @@ public class HtmlFormatter {
     private static String generateClassList(Student student, String heading, Object[] classes,
             boolean showMissing) {
         String html = "";
-        html += "<h4>" + heading + "</h4>\n";
+        html += "<h5>" + heading + "</h5>\n";
         html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp\">\n";
         html += "<thead>\n";
         html += "<tr>\n";
@@ -144,8 +146,8 @@ public class HtmlFormatter {
 
     public static String generateHtml(Student student) {
         String html = "";
-        html += "<h5>" + student.name + " (" + student.id + ") &lt;<a href=\"mailto:";
-        html += student.email + "\">" + student.email + "</a>&gt;</h5>\n";
+        html += "<h4>" + student.name + " (" + student.id + ") &lt;<a href=\"mailto:";
+        html += student.email + "\">" + student.email + "</a>&gt;</h4>\n";
 
         html += generateGeneralSection(student);
         html += "<p/>";

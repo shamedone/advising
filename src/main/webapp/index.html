@@ -27,6 +27,9 @@
         vertical-align: middle;
       }
 
+      .general {
+      }
+
       .toast {
         width:200px;
         height:20px;
@@ -87,23 +90,34 @@
         return false;
       }
 
+      function show_print_page() {
+        var printWindow = window.open("", "", "width=800, height=800");
+        var info = document.getElementById("student_info");
+        var htmlPrint = '<html><head><title>Transcript</title><link rel="stylesheet" href="material-print.css"/></head><body>' + info.innerHTML + '</body></html>';
+        printWindow.document.write(htmlPrint);
+      }
 
       function lookup_student() {
         var id = document.getElementById("student_id");
+        var section = document.getElementById("section_student_info");
         var info = document.getElementById("student_info");
-        info.style.visibility = "hidden";
+        section.style.visibility = "hidden";
         show_spinner();
         $.post("lookup-student", {token: token, id: id.value}, function(data, status) {
           info.innerHTML = data;
           componentHandler.upgradeAllRegistered();
-          info.style.visibility = "visible";
+          section.style.visibility = "visible";
           hide_spinner();
         });
         return false;
       }
 
       function update_comment(id, course) {
-        var comment = document.getElementById(course).value;
+        var commentNode = document.getElementById(course);
+        var comment = commentNode.value;
+        // Write back the attribute so that later innerHtml will read the updated values
+        // for the printing page
+        commentNode.setAttribute('value', comment);
         show_spinner();
         $.post("update-comment", {token: token, id: id, course: course, comment: comment}, function(data, status) {
           hide_spinner();
@@ -113,9 +127,19 @@
       }
 
       function update_checkpoints(id) {
-        var checkpointOralPresentation = document.getElementById('date_oral_presentation').value;
-        var checkpointAdvising413 = document.getElementById('date_advising_413').value;
-        var checkpointSubmittedAppl = document.getElementById('date_submitted_appl').value;
+        var checkpointOralPresentationNode = document.getElementById('date_oral_presentation');
+        var checkpointAdvising413Node = document.getElementById('date_advising_413');
+        var checkpointSubmittedApplNode = document.getElementById('date_submitted_appl');
+
+        var checkpointOralPresentation = checkpointOralPresentationNode.value;
+        var checkpointAdvising413 = checkpointAdvising413Node.value;
+        var checkpointSubmittedAppl = checkpointSubmittedApplNode.value;
+
+        // Write back the attribute so that later innerHtml will read the updated values
+        // for the printing page
+        checkpointOralPresentationNode.setAttribute('value', checkpointOralPresentation);
+        checkpointAdvising413Node.setAttribute('value', checkpointAdvising413);
+        checkpointSubmittedApplNode.setAttribute('value', checkpointSubmittedAppl);
 
         var e = document.querySelector('#label_oral_presentation').MaterialSwitch;
         if (checkpointOralPresentation !== "") {
@@ -199,7 +223,10 @@
                   </div>
                 </form>
               </div>
-            <div id="student_info"></div>
+            <div id="section_student_info" style="visibility: hidden">
+              <img style="float: right" onclick="show_print_page()" src="ic_print_black_24dp_1x.png"/>
+              <div id="student_info"></div>
+            </div>
             <div class='toast' style='display:none'>Information saved...</div>
           </div>
         </div>
