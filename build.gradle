@@ -37,3 +37,17 @@ war {
 httpPort = 8080
 stopPort = 9451
 stopKey = 'foo'
+
+def copyProperties = {
+    if (!file('advising.properties').exists()) {
+        throw new BuildCancelledException('File advising.properties not found!')
+    }
+    copy {
+        from 'advising.properties'
+        into 'src/main/webapp/WEB-INF/'
+    }
+}
+
+jettyRun.doFirst copyProperties
+jettyRunWar.doFirst copyProperties
+

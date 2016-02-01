@@ -1,0 +1,25 @@
+# Rename this file to advising.properties and provide proper values
+
+# Password that the user has to provide in the web interface
+PASSWORD=<password>
+
+CAMPUS_DRIVER   = oracle.jdbc.driver.OracleDriver
+CAMPUS_URL      = jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl
+CAMPUS_USERNAME = <username>
+CAMPUS_PASSWD   = <password>
+
+# Create a local MySQL database that will be used for storing comments via:
+# mysql -u root -p
+# CREATE USER 'advisor'@'localhost' IDENTIFIED BY '<mysql-passwd>';
+# GRANT ALL PRIVILEGES ON * . * TO 'advisor'@'localhost';
+# FLUSH PRIVILEGES;
+
+COMMENT_DRIVER   = com.mysql.jdbc.Driver
+COMMENT_URL      = jdbc:mysql://localhost:3307/
+COMMENT_USERNAME = advisor
+COMMENT_PASSWD   = <mysql-passwd>
+
+CHECKPOINT_DRIVER   = com.mysql.jdbc.Driver
+CHECKPOINT_URL      = jdbc:mysql://localhost:3307/
+CHECKPOINT_USERNAME = advisor
+CHECKPOINT_PASSWD   = <mysql-passwd>

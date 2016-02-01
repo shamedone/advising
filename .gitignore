@@ -1,7 +1,10 @@
 /bin
 /build
+/classes
 /obj
 /gen
+/advising.properties
+/src/main/webapp/WEB-INF/advising.properties
 .DS_Store
 .externalToolBuilders
 .gradle
