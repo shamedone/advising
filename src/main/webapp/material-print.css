@@ -46,3 +46,7 @@ th, td {
 .general {
     display: none;
 }
+
+.full-width {
+    width: 100%;
+}

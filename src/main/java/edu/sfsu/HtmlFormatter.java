@@ -80,8 +80,8 @@ public class HtmlFormatter {
         String id = courseName.replace(" ", "_");
         String html = "<td class=\"mdl-data-table__cell--non-numeric\">\n";
         html += "<form onsubmit=\"return update_comment('" + student.id + "', '" + id + "');\">\n";
-        html += "<div class=\"mdl-textfield mdl-js-textfield\">\n";
-        html += "<input class=\"mdl-textfield__input\" type=\"text\" id=\"" + id + "\"";
+        html += "<div class=\"mdl-textfield mdl-js-textfield full-width\">\n";
+        html += "<input class=\"mdl-textfield__input full-width\" type=\"text\" id=\"" + id + "\"";
         if (student.comments.containsKey(id)) {
             html += " value=\"" + student.comments.get(id) + "\"";
         }
@@ -97,14 +97,14 @@ public class HtmlFormatter {
             boolean showMissing) {
         String html = "";
         html += "<h5>" + heading + "</h5>\n";
-        html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp\">\n";
+        html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width\">\n";
         html += "<thead>\n";
         html += "<tr>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Course</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Transfer</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Semester</th>\n";
         html += "<th class=\"mdl-data-table__cell--non-numeric\">Grade</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Comment</th>\n";
+        html += "<th class=\"mdl-data-table__cell--non-numeric full-width\">Comment</th>\n";
         html += "</tr>\n";
         html += "</thead>\n";
         html += "<tbody>\n";
@@ -115,7 +115,7 @@ public class HtmlFormatter {
                     String courseName = clazz instanceof String ? (String) clazz
                             : ((String[]) clazz)[0];
                     html += "<tr>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\">" + courseName
+                    html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(courseName)
                             + "</td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
                     html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
@@ -126,14 +126,14 @@ public class HtmlFormatter {
                 continue;
             }
             html += "<tr>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.courseName;
+            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(course.courseName);
             html += "</td>\n";
             html += "<td class=\"mdl-data-table__cell--non-numeric\">";
             if (course.transferCourse != null && course.transferSchool != null) {
                 html += course.transferCourse + " (" + course.transferSchool + ")";
             }
             html += "</td>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.semester
+            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(course.semester)
                     + "</td>\n";
             html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.grade + "</td>\n";
             html += generateCommentField(student, course.courseName);
@@ -144,15 +144,19 @@ public class HtmlFormatter {
         return html;
     }
 
+    private static String replaceSpaces(String s) {
+        return s.replaceAll(" ", "&nbsp;");
+    }
+
     public static String generateHtml(Student student) {
         String html = "";
         html += "<h4>" + student.name + " (" + student.id + ") &lt;<a href=\"mailto:";
         html += student.email + "\">" + student.email + "</a>&gt;</h4>\n";
 
         html += generateGeneralSection(student);
-        html += "<p/>";
+        html += "<p>&nbsp;</p>";
         html += generateClassList(student, "Core", Course.CORE, true);
-        html += "<p/>";
+        html += "<p>&nbsp;</p>";
         html += generateClassList(student, "Electives", Course.ELECTIVES, false);
         return html;
     }

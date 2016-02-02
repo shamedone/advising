@@ -30,6 +30,10 @@
       .general {
       }
 
+      .full-width {
+        width: 100%;
+      }
+
       .toast {
         width:200px;
         height:20px;
@@ -95,6 +99,7 @@
         var info = document.getElementById("student_info");
         var htmlPrint = '<html><head><title>Transcript</title><link rel="stylesheet" href="material-print.css"/></head><body>' + info.innerHTML + '</body></html>';
         printWindow.document.write(htmlPrint);
+        printWindow.document.close();
       }
 
       function lookup_student() {
