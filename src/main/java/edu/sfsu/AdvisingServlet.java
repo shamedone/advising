@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import javax.servlet.*;
@@ -114,6 +115,10 @@ public class AdvisingServlet extends HttpServlet {
             processUpdateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
                     checkpointSubmittedAppl);
         }
+
+        if (path.equals("/generate-413-list")) {
+            process413AdvisingList(out);
+        }
         out.close();
     }
 
@@ -147,5 +152,12 @@ public class AdvisingServlet extends HttpServlet {
             String checkpointAdvising413, String checkpointSubmittedApplication) {
         checkpointDB.updateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
                 checkpointSubmittedApplication);
+    }
+
+    private void process413AdvisingList(PrintWriter out) {
+        List<Student> students = checkpointDB.generate413AdvisingList();
+        campusDB.getStudentInfo(students);
+        String html = HtmlFormatter.generate413AdvisingList(students);
+        out.write(html);
     }
 }

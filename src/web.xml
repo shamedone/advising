@@ -27,4 +27,9 @@
         <servlet-name>AdvisingServlet</servlet-name>
         <url-pattern>/update-checkpoints</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdvisingServlet</servlet-name>
+        <url-pattern>/generate-413-list</url-pattern>
+    </servlet-mapping>
 </web-app>

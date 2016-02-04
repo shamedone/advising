@@ -1,6 +1,8 @@
 package edu.sfsu.db;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CheckpointDB extends DB {
 
@@ -121,5 +123,37 @@ public class CheckpointDB extends DB {
                 }
             }
         }
+    }
+
+    public List<Student> generate413AdvisingList() {
+        List<Student> list = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            connection.setCatalog(DB_NAME);
+            String query = "select * from " + TABLE_NAME + " where " + KEY_ADVISING_413 + " <> ''";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Student student = new Student(rs.getString(KEY_STUDENT_ID));
+                student.checkpointOralPresentation = rs.getString(KEY_ORAL_PRESENTATION);
+                student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
+                student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);
+                list.add(student);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return list;
     }
 }

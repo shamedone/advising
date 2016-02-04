@@ -3,6 +3,8 @@ package edu.sfsu;
 import edu.sfsu.db.Course;
 import edu.sfsu.db.Student;
 
+import java.util.List;
+
 public class HtmlFormatter {
 
     private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
@@ -158,6 +160,25 @@ public class HtmlFormatter {
         html += generateClassList(student, "Core", Course.CORE, true);
         html += "<p>&nbsp;</p>";
         html += generateClassList(student, "Electives", Course.ELECTIVES, false);
+        return html;
+    }
+
+    public static String generate413AdvisingList(List<Student> students) {
+        String html = "<html><head><title>CSC 413 Advising List</title><link rel=\"stylesheet\" href=\"material-print.css\"></head><body>";
+        html += "<table><thead>";
+        html += "<th>Student ID</th>";
+        html += "<th>Student Name</th>";
+        html += "<th>Date</th>";
+        html += "</thead><tbody>";
+        for (Student student : students) {
+            html += "<tr>";
+            html += "<td>" + student.id + "</td>";
+            html += "<td>" + student.name + "</td>";
+            html += "<td>" + student.checkpointAdvising413 + "</td>";
+            html += "</tr>";
+        }
+        html += "</tbody></table>";
+        html += "</body></html>";
         return html;
     }
 }

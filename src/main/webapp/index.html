@@ -63,6 +63,7 @@
         spinner_count++;
         if (spinner_count == 1) {
           $("#spinner").addClass("is-active");
+          $("#adv413").css("display", "none");
         }
       }
 
@@ -70,6 +71,7 @@
         spinner_count--;
         if (spinner_count == 0) {
           $("#spinner").removeClass("is-active");
+          $("#adv413").css("display", "inline");
         }
       }
 
@@ -81,15 +83,17 @@
         var passwd = document.getElementById("passwd");
         show_spinner();
         $.post("login", {passwd: passwd.value}, function(data, status) {
+          hide_spinner();
           token = data;
           var section_lookup_student = document.getElementById("section_lookup_student");
           var section_login = document.getElementById("section_login");
-          section_lookup_student.style.visibility = (token === "") ? "hidden" : "visible";
-          section_login.style.visibility = (token === "") ? "visible" : "hidden";
+          var adv413 = document.getElementById("adv413");
+          section_lookup_student.style.display = (token === "") ? "none" : "block";
+          section_login.style.display = (token === "") ? "block" : "none";
+          adv413.style.display = (token === "") ? "none" : "block";
           if (token === "") {
             $("#passwd").parent().addClass("is-invalid");
           }
-          hide_spinner();
         });
         return false;
       }
@@ -106,12 +110,12 @@
         var id = document.getElementById("student_id");
         var section = document.getElementById("section_student_info");
         var info = document.getElementById("student_info");
-        section.style.visibility = "hidden";
+        section.style.display = "none";
         show_spinner();
         $.post("lookup-student", {token: token, id: id.value}, function(data, status) {
           info.innerHTML = data;
           componentHandler.upgradeAllRegistered();
-          section.style.visibility = "visible";
+          section.style.display = "block";
           hide_spinner();
         });
         return false;
@@ -192,6 +196,17 @@
         update_checkpoints(id);
         return true;
       }
+
+      function generate413AdvisingList() {
+        show_spinner();
+        $.post("generate-413-list", {token: token}, function(data, status) {
+          hide_spinner();
+          var listWindow = window.open("", "", "width=800, height=800");
+          listWindow.document.write(data);
+          listWindow.document.close();
+        });
+        return false;
+      }
     </script>
   </head>
   <body>
@@ -208,8 +223,9 @@
           <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
           <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
             <h3>Senior Advising</h3>
+              <div id="adv413" style="display: none; float: right; padding: 5px; background-color: lightgray" onclick="generate413AdvisingList()">413</div>
               <div id="spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" style="float: right"></div>
-              <div id="section_lookup_student" style="visibility: hidden">
+              <div id="section_lookup_student" style="display: none">
                 <form onsubmit="return lookup_student();">
                   <div class="mdl-textfield mdl-js-textfield">
                     <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
@@ -228,7 +244,7 @@
                   </div>
                 </form>
               </div>
-            <div id="section_student_info" style="visibility: hidden">
+            <div id="section_student_info" style="display: none">
               <img style="float: right" onclick="show_print_page()" src="ic_print_black_24dp_1x.png"/>
               <div id="student_info"></div>
             </div>
