@@ -4,12 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CampusDB extends DB {
 
+    private String currentSemester;
+
     public CampusDB(String driver, String url, String user, String passwd) {
         super(driver, url, user, passwd);
+
+        currentSemester = Util.getCurrentSemester();
     }
 
     public Student getStudent(String id) {
@@ -33,11 +39,15 @@ public class CampusDB extends DB {
                     student.name = rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
                     student.email = rs.getString("EMAIL_ADDR");
                 }
-                Course course = new Course();
-                course.courseName = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
-                course.semester = formatSemester(rs.getString("STRM"));
-                course.grade = rs.getString("CRSE_GRADE_OFF").replaceAll(" ", "");
-                student.courses.add(course);
+                String semester = rs.getString("STRM");
+                String grade = rs.getString("CRSE_GRADE_OFF").replaceAll(" ", "");
+                if (!grade.equals("") || semester.equals(currentSemester)) {
+                    Course course = new Course();
+                    course.courseName = rs.getString("SUBJECT") + rs.getString("CATALOG_NBR");
+                    course.semester = Util.formatSemester(semester);
+                    course.grade = grade;
+                    student.courses.add(course);
+                }
             }
             rs.close();
             ps.close();
@@ -159,44 +169,6 @@ public class CampusDB extends DB {
             return true;
         }
         return !(cs >= 300 && ct < 300);
-    }
-
-    private String formatSemester(String semester) {
-        if (semester.length() != 4) {
-            return "-";
-        }
-        String year;
-        char firstDigit = semester.charAt(0);
-        switch (firstDigit) {
-        case '1':
-            year = "19";
-            break;
-        case '2':
-            year = "20";
-            break;
-        default:
-            return "-";
-        }
-        String term;
-        year += semester.substring(1, 3);
-        char lastDigit = semester.charAt(3);
-        switch (lastDigit) {
-        case '1':
-            term = "Winter";
-            break;
-        case '3':
-            term = "Spring";
-            break;
-        case '5':
-            term = "Summer";
-            break;
-        case '7':
-            term = "Fall";
-            break;
-        default:
-            return "-";
-        }
-        return term + " " + year;
     }
 
     private String formatSemester(String term, String year) {
