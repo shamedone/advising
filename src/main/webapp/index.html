@@ -80,6 +80,7 @@
       }
 
       function login() {
+        $('#passwd').blur();
         var passwd = document.getElementById("passwd");
         show_spinner();
         $.post("login", {passwd: passwd.value}, function(data, status) {
@@ -107,6 +108,7 @@
       }
 
       function lookup_student() {
+        $('#student_id').blur();
         var id = document.getElementById("student_id");
         var section = document.getElementById("section_student_info");
         var info = document.getElementById("student_info");
@@ -227,7 +229,7 @@
               <div id="spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" style="float: right"></div>
               <div id="section_lookup_student" style="display: none">
                 <form onsubmit="return lookup_student();">
-                  <div class="mdl-textfield mdl-js-textfield">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
                     <label class="mdl-textfield__label" for="student_id">Student ID</label>
                     <span class="mdl-textfield__error">Input is not a student ID!</span>
@@ -236,8 +238,7 @@
               </div>
               <div id="section_login">
                 <form onsubmit="return login();">
-                  <b>Login:</b>&nbsp;
-                  <div class="mdl-textfield mdl-js-textfield">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="password" id="passwd" />
                     <label class="mdl-textfield__label" for="passwd">Password</label>
                     <span class="mdl-textfield__error">Wrong password!</span>
