@@ -10,139 +10,146 @@ public class HtmlFormatter {
     private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
             String checkpointId, boolean showDateField) {
         String html = "";
-        html += "<tr>\n";
-        html += "<td class=\"mdl-data-table__cell--non-numeric\">\n";
-        html += "<label id=\"label_" + checkpointId
-                + "\" class=\"mdl-switch mdl-js-switch mdl-js-ripple-effect\" for=\""
-                + checkpointId + "\"";
+        html += "<tr>";
+        html += "<td class='mdl-data-table__cell--non-numeric'>";
+        html += String
+                .format("<label id='label_%s' class='mdl-switch mdl-js-switch mdl-js-ripple-effect' for='%s'",
+                        checkpointId, checkpointId);
 
         if (!showDateField) {
-            html += " style=\"display: none;\"";
+            html += " style='display: none;'";
         }
 
-        html += ">\n";
-        html += "<input type=\"checkbox\" id=\"" + checkpointId + "\" class=\"mdl-switch__input\" ";
-        html += "onclick=\"return checkpoint_toggled('" + studentId + "', '" + checkpointId
-                + "');\"\n";
+        html += ">";
+        html += String.format("<input type='checkbox' id='%s' class='mdl-switch__input' ",
+                checkpointId);
+        html += String.format("onclick=\"return checkpoint_toggled('%s', '%s');\"", studentId,
+                checkpointId);
         if (date != null && !"".equals(date)) {
             html += " checked";
         }
-        html += "/>\n";
-        html += "<span class=\"mdl-switch__label\"></span>\n";
-        html += "</label>\n";
-        html += "</td>\n";
-        html += "<td class=\"mdl-data-table__cell--non-numeric\">" + checkpointDescr + "</td>\n";
-        html += "<td class=\"mdl-data-table__cell--non-numeric\">\n";
-        html += "<form onsubmit=\"return update_checkpoints('" + studentId + "');\">\n";
-        html += "<div class=\"mdl-textfield mdl-js-textfield\">\n";
-        html += "<input class=\"mdl-textfield__input\" type=\"text\" size=\"10\" id=\"date_"
-                + checkpointId + "\"";
+        html += "/>";
+        html += "<span class='mdl-switch__label'></span>";
+        html += "</label>";
+        html += "</td>";
+        html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                checkpointDescr);
+        html += "<td class='mdl-data-table__cell--non-numeric'>";
+        html += String.format("<form onsubmit=\"return update_checkpoints('%s');\">", studentId);
+        html += "<div class='mdl-textfield mdl-js-textfield'>";
+        html += String.format(
+                "<input class='mdl-textfield__input' type='text' size='10' id='date_%s'",
+                checkpointId);
 
         if (date != null && !"".equals(date)) {
-            html += " value=\"" + date + "\"";
+            html += String.format(" value='%s'", e(date));
         }
 
-        html += "/>\n";
-        html += "<label class=\"mdl-textfield__label\" for=\"date_" + checkpointId
-                + "\">";
+        html += "/>";
+        html += String.format("<label class='mdl-textfield__label' for='date_%s'>", checkpointId);
         html += showDateField ? "Date" : "Comment";
-        html += "...</label>\n";
-        html += "</div>\n";
-        html += "</form>\n";
-        html += "</td>\n";
-        html += "</tr>\n";
+        html += "...</label>";
+        html += "</div>";
+        html += "</form>";
+        html += "</td>";
+        html += "</tr>";
         return html;
     }
 
     private static String generateGeneralSection(Student student) {
-        String html = "<div class=\"general\">\n";
-        html += "<h5>General</h5>\n";
-        html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp\">\n";
-        html += "<thead>\n";
-        html += "<tr>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\"></th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Checkpoint</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Date/Comment</th>\n";
-        html += "</tr>\n";
-        html += "</thead>\n";
-        html += "<tbody>\n";
+        String html = "<div class='general'>";
+        html += "<h5>General</h5>";
+        html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th class='mdl-data-table__cell--non-numeric'></th>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Checkpoint</th>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Date/Comment</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
         html += generateCheckpoint(student.id, student.checkpointOralPresentation,
                 "Senior Oral Presentation", "oral_presentation", false);
         html += generateCheckpoint(student.id, student.checkpointAdvising413, "413 Advising",
                 "advising_413", true);
         html += generateCheckpoint(student.id, student.checkpointSubmittedApplication,
                 "Submitted Graduate Application", "submitted_appl", true);
-        html += "</tbody>\n";
-        html += "</table>\n";
-        html += "</div>\n";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</div>";
         return html;
     }
 
     private static String generateCommentField(Student student, String courseName) {
         String id = courseName.replace(" ", "_");
-        String html = "<td class=\"mdl-data-table__cell--non-numeric\">\n";
-        html += "<form onsubmit=\"return update_comment('" + student.id + "', '" + id + "');\">\n";
-        html += "<div class=\"mdl-textfield mdl-js-textfield full-width\">\n";
-        html += "<input class=\"mdl-textfield__input full-width\" type=\"text\" id=\"" + id + "\"";
+        String html = "<td class='mdl-data-table__cell--non-numeric'>";
+        html += String.format("<form onsubmit=\"return update_comment('%s', '%s');\">", student.id,
+                id);
+        html += "<div class='mdl-textfield mdl-js-textfield full-width'>";
+        html += String.format("<input class='mdl-textfield__input full-width' type='text' id='%s'",
+                id);
         if (student.comments.containsKey(id)) {
-            html += " value=\"" + student.comments.get(id) + "\"";
+            html += String.format(" value='%s'", e(student.comments.get(id)));
         }
-        html += "/>\n";
-        html += "<label class=\"mdl-textfield__label\" for=\"" + id + "\">Comment...</label>\n";
-        html += "</div>\n";
-        html += "</form>\n";
-        html += "</td>\n";
+        html += "/>";
+        html += String
+                .format("<label class='mdl-textfield__label' for='%s'>Comment...</label>", id);
+        html += "</div>";
+        html += "</form>";
+        html += "</td>";
         return html;
     }
 
     private static String generateClassList(Student student, String heading, Object[] classes,
             boolean showMissing) {
         String html = "";
-        html += "<h5>" + heading + "</h5>\n";
-        html += "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width\">\n";
-        html += "<thead>\n";
-        html += "<tr>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Course</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Transfer</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Semester</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric\">Grade</th>\n";
-        html += "<th class=\"mdl-data-table__cell--non-numeric full-width\">Comment</th>\n";
-        html += "</tr>\n";
-        html += "</thead>\n";
-        html += "<tbody>\n";
+        html += String.format("<h5>%s</h5>", heading);
+        html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Course</th>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Transfer</th>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Semester</th>";
+        html += "<th class='mdl-data-table__cell--non-numeric'>Grade</th>";
+        html += "<th class='mdl-data-table__cell--non-numeric full-width'>Comment</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
         for (Object clazz : classes) {
             Course course = student.requirementFor(clazz);
             if (course == null) {
                 if (showMissing) {
                     String courseName = clazz instanceof String ? (String) clazz
                             : ((String[]) clazz)[0];
-                    html += "<tr>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(courseName)
-                            + "</td>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
-                    html += "<td class=\"mdl-data-table__cell--non-numeric\"></td>\n";
+                    html += "<tr>";
+                    html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                            replaceSpaces(courseName));
+                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
                     html += generateCommentField(student, courseName);
-                    html += "</tr>\n";
+                    html += "</tr>";
                 }
                 continue;
             }
-            html += "<tr>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(course.courseName);
-            html += "</td>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">";
+            html += "<tr>";
+            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                    replaceSpaces(course.courseName));
+            html += "<td class='mdl-data-table__cell--non-numeric'>";
             if (course.transferCourse != null && course.transferSchool != null) {
-                html += course.transferCourse + " (" + course.transferSchool + ")";
+                html += String.format("%s (%s)", replaceSpaces(course.transferCourse),
+                        replaceSpaces(course.transferSchool));
             }
-            html += "</td>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + replaceSpaces(course.semester)
-                    + "</td>\n";
-            html += "<td class=\"mdl-data-table__cell--non-numeric\">" + course.grade + "</td>\n";
+            html += "</td>";
+            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                    replaceSpaces(course.semester));
+            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                    course.grade);
             html += generateCommentField(student, course.courseName);
-            html += "</tr>\n";
+            html += "</tr>";
         }
-        html += "</tbody>\n";
-        html += "</table>\n";
+        html += "</tbody>";
+        html += "</table>";
         return html;
     }
 
@@ -150,10 +157,14 @@ public class HtmlFormatter {
         return s.replaceAll(" ", "&nbsp;");
     }
 
+    private static String e(String s) {
+        return s.replace("'", "&#39;");
+    }
+
     public static String generateHtml(Student student) {
         String html = "";
-        html += "<h4>" + student.name + " (" + student.id + ") &lt;<a href=\"mailto:";
-        html += student.email + "\">" + student.email + "</a>&gt;</h4>\n";
+        html += String.format("<h4>%s (%s) &lt;<a href='mailto:%s'>%s</a>&gt;</h4>", student.name,
+                student.id, student.email, student.email);
 
         html += generateGeneralSection(student);
         html += "<p>&nbsp;</p>";
@@ -164,7 +175,7 @@ public class HtmlFormatter {
     }
 
     public static String generate413AdvisingList(List<Student> students) {
-        String html = "<html><head><title>CSC 413 Advising List</title><link rel=\"stylesheet\" href=\"material-print.css\"></head><body>";
+        String html = "<html><head><title>CSC 413 Advising List</title><link rel='stylesheet' href='material-print.css'></head><body>";
         html += "<table><thead>";
         html += "<th>Student ID</th>";
         html += "<th>Student Name</th>";
@@ -172,9 +183,9 @@ public class HtmlFormatter {
         html += "</thead><tbody>";
         for (Student student : students) {
             html += "<tr>";
-            html += "<td>" + student.id + "</td>";
-            html += "<td>" + student.name + "</td>";
-            html += "<td>" + student.checkpointAdvising413 + "</td>";
+            html += String.format("<td>%s</td>", student.id);
+            html += String.format("<td>%s</td>", student.name);
+            html += String.format("<td>%s</td>", student.checkpointAdvising413);
             html += "</tr>";
         }
         html += "</tbody></table>";
