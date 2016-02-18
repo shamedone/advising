@@ -8,7 +8,7 @@
 }
 
 .mdl-data-table__cell--non-numeric {
-    font-size: x-small;
+    font-size: xx-small;
 }
 
 .mdl-textfield {
@@ -39,12 +39,16 @@
 .mdl-js-ripple-effect {
 }
 
+table, th, td {
+    border-bottom: 1px solid #ddd;
+}
+
 th, td {
     padding-right: 15px;
 }
 
-table, th, td {
-    border: 1px solid black;
+form {
+    margin: 0px;
 }
 
 .general {
