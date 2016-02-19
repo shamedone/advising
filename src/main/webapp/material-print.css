@@ -51,6 +51,10 @@ form {
     margin: 0px;
 }
 
+.vertical-padding {
+    height: 0px;
+}
+
 .general {
     display: none;
 }

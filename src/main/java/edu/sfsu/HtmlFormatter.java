@@ -4,12 +4,24 @@ import edu.sfsu.db.Course;
 import edu.sfsu.db.CourseRequirements;
 import edu.sfsu.db.Student;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HtmlFormatter {
 
+    final private static List<Object> transfers;
+
+    static {
+        transfers = new ArrayList<>();
+        transfers.add("Transfer 1");
+        transfers.add("Transfer 2");
+        transfers.add("Transfer 3");
+        transfers.add("Transfer 4");
+        transfers.add("Transfer 5");
+    }
+
     private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
-            String checkpointId, boolean showDateField) {
+                                             String checkpointId, boolean showDateField) {
         String html = "";
         html += "<tr>";
         html += "<td class='mdl-data-table__cell--non-numeric'>";
@@ -102,16 +114,18 @@ public class HtmlFormatter {
     }
 
     private static String generateClassList(Student student, String heading, List<Object> classes,
-            boolean showMissing) {
+                                            boolean showMissing, boolean showDetails) {
         String html = "";
         html += String.format("<h5>%s</h5>", heading);
         html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width'>";
         html += "<thead>";
         html += "<tr>";
         html += "<th class='mdl-data-table__cell--non-numeric'>Course</th>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Transfer</th>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Semester</th>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Grade</th>";
+        if (showDetails) {
+            html += "<th class='mdl-data-table__cell--non-numeric'>Transfer</th>";
+            html += "<th class='mdl-data-table__cell--non-numeric'>Semester</th>";
+            html += "<th class='mdl-data-table__cell--non-numeric'>Grade</th>";
+        }
         html += "<th class='mdl-data-table__cell--non-numeric full-width'>Comment</th>";
         html += "</tr>";
         html += "</thead>";
@@ -125,9 +139,11 @@ public class HtmlFormatter {
                     html += "<tr>";
                     html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
                             replaceSpaces(courseName));
-                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
-                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
-                    html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                    if (showDetails) {
+                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                    }
                     html += generateCommentField(student, courseName);
                     html += "</tr>";
                 }
@@ -136,16 +152,18 @@ public class HtmlFormatter {
             html += "<tr>";
             html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
                     replaceSpaces(course.courseName));
-            html += "<td class='mdl-data-table__cell--non-numeric'>";
-            if (course.transferCourse != null && course.transferSchool != null) {
-                html += String.format("%s (%s)", replaceSpaces(course.transferCourse),
-                        replaceSpaces(course.transferSchool));
+            if (showDetails) {
+                html += "<td class='mdl-data-table__cell--non-numeric'>";
+                if (course.transferCourse != null && course.transferSchool != null) {
+                    html += String.format("%s (%s)", replaceSpaces(course.transferCourse),
+                            replaceSpaces(course.transferSchool));
+                }
+                html += "</td>";
+                html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                        replaceSpaces(course.semester));
+                html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
+                        course.grade);
             }
-            html += "</td>";
-            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                    replaceSpaces(course.semester));
-            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                    course.grade);
             html += generateCommentField(student, course.courseName);
             html += "</tr>";
         }
@@ -168,10 +186,12 @@ public class HtmlFormatter {
                 student.id, student.email, student.email);
 
         html += generateGeneralSection(student);
-        html += "<p>&nbsp;</p>";
-        html += generateClassList(student, "Core", CourseRequirements.core, true);
-        html += "<p>&nbsp;</p>";
-        html += generateClassList(student, "Electives", CourseRequirements.electives, false);
+        html += "<div class='vertical-padding'></div>";
+        html += generateClassList(student, "Core", CourseRequirements.core, true, true);
+        html += "<div class='vertical-padding'></div>";
+        html += generateClassList(student, "Electives", CourseRequirements.electives, false, true);
+        html += "<div class='vertical-padding'></div>";
+        html += generateClassList(student, "Transfers", transfers, true, false);
         return html;
     }
 
