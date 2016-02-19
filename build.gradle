@@ -27,27 +27,29 @@ dependencies {
     compile 'mysql:mysql-connector-java:5.1.6'
     compile 'org.apache.commons:commons-dbcp2:2.0'
     compile 'commons-io:commons-io:2.4'
+    compile 'com.googlecode.json-simple:json-simple:1.1'
 }
 
 war {
     classpath fileTree('libs')
     webXml = file('src/web.xml')
+    webInf {
+        from('.') {
+            include 'advising.properties'
+            include 'course_requirements.json'
+        }
+    }
+}
+
+war.doFirst {
+    if (!file('advising.properties').exists()) {
+        throw new BuildCancelledException('File advising.properties not found!')
+    }
+    if (!file('course_requirements.json').exists()) {
+        throw new BuildCancelledException('File course_requirements.json not found!')
+    }
 }
 
 httpPort = 8080
 stopPort = 9451
 stopKey = 'foo'
-
-def copyProperties = {
-    if (!file('advising.properties').exists()) {
-        throw new BuildCancelledException('File advising.properties not found!')
-    }
-    copy {
-        from 'advising.properties'
-        into 'src/main/webapp/WEB-INF/'
-    }
-}
-
-jettyRun.doFirst copyProperties
-jettyRunWar.doFirst copyProperties
-

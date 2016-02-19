@@ -1,9 +1,10 @@
 package edu.sfsu;
 
-import edu.sfsu.db.CampusDB;
-import edu.sfsu.db.CheckpointDB;
-import edu.sfsu.db.CommentDB;
-import edu.sfsu.db.Student;
+import edu.sfsu.db.*;
+import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,8 +19,8 @@ import javax.servlet.*;
 
 public class AdvisingServlet extends HttpServlet {
 
-    private String password;
-    private String token;
+    private String       password;
+    private String       token;
 
     private CommentDB    commentDB;
     private CheckpointDB checkpointDB;
@@ -29,11 +30,21 @@ public class AdvisingServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext context = config.getServletContext();
-        InputStream is = context.getResourceAsStream("/WEB-INF/advising.properties");
+
         Properties props = new Properties();
+
         try {
+            InputStream is = context.getResourceAsStream("/WEB-INF/course_requirements.json");
+            String s = IOUtils.toString(is);
+            is.close();
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(s);
+            CourseRequirements.init(json);
+
+            is = context.getResourceAsStream("/WEB-INF/advising.properties");
             props.load(is);
-        } catch (IOException e) {
+            is.close();
+        } catch (IOException | ParseException e) {
             throw new ServletException(e.getMessage());
         }
 

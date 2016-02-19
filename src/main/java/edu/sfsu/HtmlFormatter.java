@@ -1,6 +1,7 @@
 package edu.sfsu;
 
 import edu.sfsu.db.Course;
+import edu.sfsu.db.CourseRequirements;
 import edu.sfsu.db.Student;
 
 import java.util.List;
@@ -100,7 +101,7 @@ public class HtmlFormatter {
         return html;
     }
 
-    private static String generateClassList(Student student, String heading, Object[] classes,
+    private static String generateClassList(Student student, String heading, List<Object> classes,
             boolean showMissing) {
         String html = "";
         html += String.format("<h5>%s</h5>", heading);
@@ -168,9 +169,9 @@ public class HtmlFormatter {
 
         html += generateGeneralSection(student);
         html += "<p>&nbsp;</p>";
-        html += generateClassList(student, "Core", Course.CORE, true);
+        html += generateClassList(student, "Core", CourseRequirements.core, true);
         html += "<p>&nbsp;</p>";
-        html += generateClassList(student, "Electives", Course.ELECTIVES, false);
+        html += generateClassList(student, "Electives", CourseRequirements.electives, false);
         return html;
     }
 

@@ -31,8 +31,8 @@ public class Student {
             return requirementFor((String) course);
         }
         // List of alternative courses
-        for (String courseName : (String[]) course) {
-            Course c = requirementFor(courseName);
+        for (Object courseName : (List<Object>) course) {
+            Course c = requirementFor((String) courseName);
             if (c != null) {
                 return c;
             }
