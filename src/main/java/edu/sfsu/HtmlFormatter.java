@@ -135,7 +135,7 @@ public class HtmlFormatter {
             if (course == null) {
                 if (showMissing) {
                     String courseName = clazz instanceof String ? (String) clazz
-                            : ((String[]) clazz)[0];
+                            : ((ArrayList<String>) clazz).get(0);
                     html += "<tr>";
                     html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
                             replaceSpaces(courseName));
