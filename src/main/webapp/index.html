@@ -1,272 +1,278 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Computer Science - Senior Advising</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>San Francisco State University - Computer Science</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <link rel="stylesheet" href="material.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.deep_purple-pink.min.css">
+    <link rel="stylesheet" href="styles2.css">
     <style>
-      #view-source {
-        position: fixed;
-        display: block;
-        right: 0;
-        bottom: 0;
-        margin-right: 40px;
-        margin-bottom: 40px;
-        z-index: 900;
-      }
+        .general {
+        }
 
-      .mdl-data-table td {
-        vertical-align: middle;
-      }
+        .full-width {
+            width: 100%;
+        }
 
-      .general {
-      }
+        .background-color-white {
+            background-color: white;
+        }
 
-      .full-width {
-        width: 100%;
-      }
+        .vertical-padding {
+            height: 2em;
+        }
 
-      .vertical-padding {
-        height: 2em;
-      }
-
-      .toast {
-        width:200px;
-        height:20px;
-        height:auto;
-        position:fixed;
-        left:50%;
-        margin-left:-100px;
-        bottom:10px;
-        background-color: #383838;
-        color: #F0F0F0;
-        font-family: Calibri;
-        font-size: 20px;
-        padding:10px;
-        text-align:center;
-        border-radius: 2px;
-        -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-        -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-        box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
-      }
+        .display-none {
+            display: none;
+        }
     </style>
     <script src="date.format.js" type="application/javascript"></script>
     <script>
-      var spinner_count = 0;
-      var token = "";
+        var spinner_count = 0;
+        var token = "";
 
-      function show_spinner() {
-        spinner_count++;
-        if (spinner_count == 1) {
-          $("#spinner").addClass("is-active");
-          $("#adv413").css("display", "none");
-        }
-      }
-
-      function hide_spinner() {
-        spinner_count--;
-        if (spinner_count == 0) {
-          $("#spinner").removeClass("is-active");
-          $("#adv413").css("display", "inline");
-        }
-      }
-
-      function show_toast() {
-        $('.toast').fadeIn(400).delay(2000).fadeOut(400);
-      }
-
-      function login() {
-        $('#passwd').blur();
-        var passwd = document.getElementById("passwd");
-        show_spinner();
-        $.post("login", {passwd: passwd.value}, function(data, status) {
-          hide_spinner();
-          token = data;
-          var section_lookup_student = document.getElementById("section_lookup_student");
-          var section_login = document.getElementById("section_login");
-          var adv413 = document.getElementById("adv413");
-          section_lookup_student.style.display = (token === "") ? "none" : "block";
-          section_login.style.display = (token === "") ? "block" : "none";
-          adv413.style.display = (token === "") ? "none" : "block";
-          if (token === "") {
-            $("#passwd").parent().addClass("is-invalid");
-          }
-        });
-        return false;
-      }
-
-      function show_print_page() {
-        var printWindow = window.open("", "", "width=800, height=800");
-        var info = document.getElementById("student_info");
-        var htmlPrint = '<html><head><title>Transcript</title><link rel="stylesheet" href="material-print.css"/></head><body>' + info.innerHTML + '</body></html>';
-        printWindow.document.write(htmlPrint);
-        printWindow.document.close();
-      }
-
-      function lookup_student() {
-        $('#student_id').blur();
-        var id = document.getElementById("student_id");
-        var section = document.getElementById("section_student_info");
-        var info = document.getElementById("student_info");
-        section.style.display = "none";
-        show_spinner();
-        $.post("lookup-student", {token: token, id: id.value}, function(data, status) {
-          info.innerHTML = data;
-          componentHandler.upgradeAllRegistered();
-          section.style.display = "block";
-          hide_spinner();
-        });
-        return false;
-      }
-
-      function update_comment(id, course) {
-        var commentNode = document.getElementById(course);
-        var comment = commentNode.value;
-        // Write back the attribute so that later innerHtml will read the updated values
-        // for the printing page
-        commentNode.setAttribute('value', comment);
-        show_spinner();
-        $.post("update-comment", {token: token, id: id, course: course, comment: comment}, function(data, status) {
-          hide_spinner();
-          show_toast();
-        });
-        return false;
-      }
-
-      function update_checkpoints(id) {
-        var checkpointOralPresentationNode = document.getElementById('date_oral_presentation');
-        var checkpointAdvising413Node = document.getElementById('date_advising_413');
-        var checkpointSubmittedApplNode = document.getElementById('date_submitted_appl');
-
-        var checkpointOralPresentation = checkpointOralPresentationNode.value;
-        var checkpointAdvising413 = checkpointAdvising413Node.value;
-        var checkpointSubmittedAppl = checkpointSubmittedApplNode.value;
-
-        // Write back the attribute so that later innerHtml will read the updated values
-        // for the printing page
-        checkpointOralPresentationNode.setAttribute('value', checkpointOralPresentation);
-        checkpointAdvising413Node.setAttribute('value', checkpointAdvising413);
-        checkpointSubmittedApplNode.setAttribute('value', checkpointSubmittedAppl);
-
-        var e = document.querySelector('#label_oral_presentation').MaterialSwitch;
-        if (checkpointOralPresentation !== "") {
-          e.on();
-        } else {
-          e.off();
+        function show_spinner() {
+            spinner_count++;
+            if (spinner_count == 1) {
+                $("#spinner").addClass("is-active");
+            }
         }
 
-        e = document.querySelector('#label_advising_413').MaterialSwitch;
-        if (checkpointAdvising413 !== "") {
-          e.on();
-        } else {
-          e.off();
+        function hide_spinner() {
+            spinner_count--;
+            if (spinner_count == 0) {
+                $("#spinner").removeClass("is-active");
+            }
         }
 
-        e = document.querySelector('#label_submitted_appl').MaterialSwitch;
-        if (checkpointSubmittedAppl !== "") {
-          e.on();
-        } else {
-          e.off();
+        function show_toast() {
+            var snackbarContainer = document.querySelector('#toast');
+            var data = {message: 'Information saved...'};
+            snackbarContainer.MaterialSnackbar.showSnackbar(data);
         }
 
-        show_spinner();
-        $.post("update-checkpoints", {token: token, id: id,
-          checkpointOralPresentation: checkpointOralPresentation,
-          checkpointAdvising413: checkpointAdvising413,
-          checkpointSubmittedAppl: checkpointSubmittedAppl}, function(data, status) {
-          hide_spinner();
-          show_toast();
-        });
-        return false;
-      }
-
-      function checkpoint_toggled(id, type) {
-        var isChecked = document.getElementById(type).checked;
-        var dateField = document.getElementById("date_" + type);
-        if (isChecked) {
-          var now = new Date();
-          dateField.value = now.format("mm/dd/yyyy");
-          $('#date_' + type).parent().addClass('is-dirty');
-        } else {
-          dateField.value = "";
-          $('#date_' + type).parent().removeClass('is-dirty');
+        function login() {
+            $('#passwd').blur();
+            var passwd = document.getElementById("passwd");
+            $.post("login", {passwd: passwd.value}, function(data, status) {
+                token = data;
+                var section_navigation = document.getElementById("navigation");
+                var section_main = document.getElementById("section_main");
+                var section_login = document.getElementById("section_login");
+                section_navigation.style.display = (token === "") ? "none" : "block";
+                section_main.style.display = (token === "") ? "none" : "block";
+                section_login.style.display = (token === "") ? "block" : "none";
+                if (token === "") {
+                    $("#passwd").parent().addClass("is-invalid");
+                }
+            });
+            return false;
         }
-        update_checkpoints(id);
-        return true;
-      }
 
-      function generate413AdvisingList() {
-        show_spinner();
-        $.post("generate-413-list", {token: token}, function(data, status) {
-          hide_spinner();
-          var listWindow = window.open("", "", "width=800, height=800");
-          listWindow.document.write(data);
-          listWindow.document.close();
-        });
-        return false;
-      }
+        function show_print_page() {
+            var printWindow = window.open("", "", "width=800, height=800");
+            var info = document.getElementById("student_info");
+            var htmlPrint = '<html><head><title>Transcript</title><link rel="stylesheet" href="material-print.css"/></head><body>' + info.innerHTML + '</body></html>';
+            printWindow.document.write(htmlPrint);
+            printWindow.document.close();
+        }
+
+        function lookup_student() {
+            $('#student_id').blur();
+            var id = document.getElementById("student_id");
+            var section = document.getElementById("section_student_info");
+            var info = document.getElementById("student_info");
+            section.style.display = "none";
+            show_spinner();
+            $.post("lookup-student", {token: token, id: id.value}, function(data, status) {
+                info.innerHTML = data;
+                componentHandler.upgradeAllRegistered();
+                section.style.display = "block";
+                hide_spinner();
+            });
+            return false;
+        }
+
+        function update_comment(id, course) {
+            var commentNode = document.getElementById(course);
+            var comment = commentNode.value;
+            // Write back the attribute so that later innerHtml will read the updated values
+            // for the printing page
+            commentNode.setAttribute('value', comment);
+            show_spinner();
+            $.post("update-comment", {token: token, id: id, course: course, comment: comment}, function(data, status) {
+                hide_spinner();
+                show_toast();
+            });
+            return false;
+        }
+
+        function update_checkpoints(id) {
+            var checkpointOralPresentationNode = document.getElementById('date_oral_presentation');
+            var checkpointAdvising413Node = document.getElementById('date_advising_413');
+            var checkpointSubmittedApplNode = document.getElementById('date_submitted_appl');
+
+            var checkpointOralPresentation = checkpointOralPresentationNode.value;
+            var checkpointAdvising413 = checkpointAdvising413Node.value;
+            var checkpointSubmittedAppl = checkpointSubmittedApplNode.value;
+
+            // Write back the attribute so that later innerHtml will read the updated values
+            // for the printing page
+            checkpointOralPresentationNode.setAttribute('value', checkpointOralPresentation);
+            checkpointAdvising413Node.setAttribute('value', checkpointAdvising413);
+            checkpointSubmittedApplNode.setAttribute('value', checkpointSubmittedAppl);
+
+            var e = document.querySelector('#label_oral_presentation').MaterialSwitch;
+            if (checkpointOralPresentation !== "") {
+                e.on();
+            } else {
+                e.off();
+            }
+
+            e = document.querySelector('#label_advising_413').MaterialSwitch;
+            if (checkpointAdvising413 !== "") {
+                e.on();
+            } else {
+                e.off();
+            }
+
+            e = document.querySelector('#label_submitted_appl').MaterialSwitch;
+            if (checkpointSubmittedAppl !== "") {
+                e.on();
+            } else {
+                e.off();
+            }
+
+            show_spinner();
+            $.post("update-checkpoints", {token: token, id: id,
+                checkpointOralPresentation: checkpointOralPresentation,
+                checkpointAdvising413: checkpointAdvising413,
+                checkpointSubmittedAppl: checkpointSubmittedAppl}, function(data, status) {
+                hide_spinner();
+                show_toast();
+            });
+            return false;
+        }
+
+        function checkpoint_toggled(id, type) {
+            var isChecked = document.getElementById(type).checked;
+            var dateField = document.getElementById("date_" + type);
+            if (isChecked) {
+                var now = new Date();
+                dateField.value = now.format("mm/dd/yyyy");
+                $('#date_' + type).parent().addClass('is-dirty');
+            } else {
+                dateField.value = "";
+                $('#date_' + type).parent().removeClass('is-dirty');
+            }
+            update_checkpoints(id);
+            return true;
+        }
+
+        function generate413AdvisingList(button) {
+            button.disabled = true;
+            show_spinner();
+            $.post("generate-413-list", {token: token}, function(data, status) {
+                hide_spinner();
+                button.disabled = false;
+                var listWindow = window.open("", "", "width=800, height=800");
+                listWindow.document.write(data);
+                listWindow.document.close();
+            });
+            return false;
+        }
     </script>
-  </head>
-  <body>
-    <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
-      <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
-        <div class="mdl-layout__header-row">
-          <span class="mdl-layout-title">San Francisco State University - Computer Science</span>
-          <div class="mdl-layout-spacer"></div>
+</head>
+<body class="mdl-demo mdl-color-text--grey-700 mdl-base">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
-      </header>
-      <div class="demo-ribbon"></div>
-      <main class="demo-main mdl-layout__content">
-        <div class="demo-container mdl-grid">
-          <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
-          <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-            <h3>Senior Advising</h3>
-              <div id="adv413" style="display: none; float: right; padding: 5px; background-color: lightgray" onclick="generate413AdvisingList()">413</div>
-              <div id="spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" style="float: right"></div>
-              <div id="section_lookup_student" style="display: none">
-                <form onsubmit="return lookup_student();">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
-                    <label class="mdl-textfield__label" for="student_id">Student ID</label>
-                    <span class="mdl-textfield__error">Input is not a student ID!</span>
-                  </div>
-                </form>
-              </div>
-              <div id="section_login">
-                <form onsubmit="return login();">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="password" id="passwd" />
-                    <label class="mdl-textfield__label" for="passwd">Password</label>
-                    <span class="mdl-textfield__error">Wrong password!</span>
-                  </div>
-                </form>
-              </div>
-            <div id="section_student_info" style="display: none">
-              <img style="float: right" onclick="show_print_page()" src="ic_print_black_24dp_1x.png"/>
-              <div id="student_info"></div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+            <h3>San Francisco State University - Computer Science</h3>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div id="navigation" class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark display-none">
+            <a href="#senior_advising" class="mdl-layout__tab is-active">Senior Advising</a>
+            <a href="#advising413" class="mdl-layout__tab">413 Advising</a>
+            <a href="#graduation_list" class="mdl-layout__tab">Graduation List</a>
+        </div>
+    </header>
+    <main id="section_login" class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card__supporting-text">
+                    <h4>Login</h4>
+                    <form onsubmit="return login();">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="password" id="passwd" />
+                            <label class="mdl-textfield__label" for="passwd">Password</label>
+                            <span class="mdl-textfield__error">Wrong password!</span>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+    <main id="section_main" class="mdl-layout__content display-none">
+        <section class="section--center mdl-grid background-color-white">
+            <div class="full-width">
+                <div id="spinner" class="mdl-spinner mdl-spinner--single-color mdl-js-spinner" style="float: right"></div>
             </div>
-            <div class='toast' style='display:none'>Information saved...</div>
-          </div>
+        </section>
+        <div class="mdl-layout__tab-panel is-active" id="senior_advising">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card__supporting-text">
+                    <h4>Senior Advising</h4>
+                    <form onsubmit="return lookup_student();">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
+                            <label class="mdl-textfield__label" for="student_id">Student ID</label>
+                            <span class="mdl-textfield__error">Input is not a student ID!</span>
+                        </div>
+                    </form>
+                </div>
+                <div id="section_student_info" style="display: none">
+                    <img style="float: right" onclick="show_print_page()" src="ic_print_black_24dp_1x.png"/>
+                    <div id="student_info"></div>
+                </div>
+            </section>
         </div>
-        <footer class="demo-footer mdl-mini-footer">
-          <div class="mdl-mini-footer--left-section">
-            <ul class="mdl-mini-footer--link-list">
-              <li><a href="http://www.sfsu.edu">SFSU</a></li>
-              <li><a href="http://cs.sfsu.edu">Computer Science</a></li>
-            </ul>
-          </div>
-        </footer>
-      </main>
+        <div class="mdl-layout__tab-panel" id="advising413">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card__supporting-text">
+                    <h4>413 Advising List</h4>
+                    <p>Compiling the 413 advising list may take several minutes.</p>
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generate413AdvisingList(this)">
+                        <i class="material-icons">forward</i>
+                    </button>
+                </div>
+            </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="graduation_list">
+            <section class="section--center mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card__supporting-text">
+                    <h4>Graduation List</h4>
+                    <p>Compiling the list of graduates may take several minutes.</p>
+                    <button class="mdl-button mdl-js-button mdl-button--fab" disabled>
+                        <i class="material-icons">forward</i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+    <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
     </div>
-    <script src="jquery-2.1.4.min.js"></script>
-    <script src="material.min.js"></script>
-  </body>
+</div>
+<script src="jquery-2.1.4.min.js"></script>
+<script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+</body>
 </html>
