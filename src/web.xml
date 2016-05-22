@@ -30,6 +30,6 @@
 
     <servlet-mapping>
         <servlet-name>AdvisingServlet</servlet-name>
-        <url-pattern>/generate-413-list</url-pattern>
+        <url-pattern>/generate-list</url-pattern>
     </servlet-mapping>
 </web-app>

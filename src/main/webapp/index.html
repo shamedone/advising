@@ -178,10 +178,10 @@
             return true;
         }
 
-        function generate413AdvisingList(button) {
+        function generateList(button, type) {
             button.disabled = true;
             show_spinner();
-            $.post("generate-413-list", {token: token}, function(data, status) {
+            $.post("generate-list", {token: token, type: type}, function(data, status) {
                 hide_spinner();
                 button.disabled = false;
                 var listWindow = window.open("", "", "width=800, height=800");
@@ -254,7 +254,7 @@
                     <h4>413 Advising List</h4>
                     <p>Compile a list of all students who have received 413 advising. A future version will
                       allow to specify a date range.</p>
-                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generate413AdvisingList(this)">
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, '413')">
                         <i class="material-icons">forward</i>
                     </button>
                 </div>
@@ -266,7 +266,7 @@
                     <h4>Graduation List</h4>
                     <p>Compile a list of all students who have graduated. A future version will
                       allow to specify a date range.</p>
-                    <button class="mdl-button mdl-js-button mdl-button--fab" disabled>
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, 'graduated')">
                         <i class="material-icons">forward</i>
                     </button>
                 </div>

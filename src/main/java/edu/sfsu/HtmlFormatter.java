@@ -20,8 +20,9 @@ public class HtmlFormatter {
         transfers.add("Transfer 5");
     }
 
+
     private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
-                                             String checkpointId, boolean showDateField) {
+            String checkpointId, boolean showDateField) {
         String html = "";
         html += "<tr>";
         html += "<td class='mdl-data-table__cell--non-numeric'>";
@@ -116,7 +117,7 @@ public class HtmlFormatter {
     }
 
     private static String generateClassList(Student student, String heading, List<Object> classes,
-                                            boolean showMissing, boolean showDetails) {
+            boolean showMissing, boolean showDetails) {
         String html = "";
         html += String.format("<h5>%s</h5>", heading);
         html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width'>";
@@ -197,8 +198,17 @@ public class HtmlFormatter {
         return html;
     }
 
-    public static String generate413AdvisingList(List<Student> students) {
-        String html = "<html><head><title>CSC 413 Advising List</title><link rel='stylesheet' href='material-print.css'></head><body>";
+    public static String generateList(List<Student> students, String type) {
+        String title = "General";
+        if (type.equals("413")) {
+            title = "CSC 413 Advising List";
+        }
+        if (type.equals("graduated")) {
+            title = "Graduated Students";
+        }
+        String html = String
+                .format("<html><head><title>%s</title><link rel='stylesheet' href='material-print.css'></head><body>",
+                        title);
         html += "<table><thead>";
         html += "<th>Student ID</th>";
         html += "<th>Student Name</th>";
@@ -208,7 +218,14 @@ public class HtmlFormatter {
             html += "<tr>";
             html += String.format("<td>%s</td>", student.id);
             html += String.format("<td>%s</td>", student.name);
-            html += String.format("<td>%s</td>", student.checkpointAdvising413);
+            String date = "-";
+            if (type.equals("413")) {
+                date = student.checkpointAdvising413;
+            }
+            if (type.equals("graduated")) {
+                date = student.checkpointSubmittedApplication;
+            }
+            html += String.format("<td>%s</td>", date);
             html += "</tr>";
         }
         html += "</tbody></table>";

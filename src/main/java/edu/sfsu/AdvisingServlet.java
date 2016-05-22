@@ -129,8 +129,9 @@ public class AdvisingServlet extends HttpServlet {
                     checkpointAdvising413, checkpointSubmittedAppl);
         }
 
-        if (path.equals("/generate-413-list")) {
-            process413AdvisingList(out);
+        if (path.equals("/generate-list")) {
+            String type = request.getParameter("type");
+            processGenerateList(out, type);
         }
         out.close();
     }
@@ -168,9 +169,9 @@ public class AdvisingServlet extends HttpServlet {
                 checkpointAdvising413, checkpointSubmittedApplication);
     }
 
-    private void process413AdvisingList(PrintWriter out) {
-        List<Student> students = checkpointDB.generate413AdvisingList();
-        String html = HtmlFormatter.generate413AdvisingList(students);
+    private void processGenerateList(PrintWriter out, String type) {
+        List<Student> students = checkpointDB.generateList(type);
+        String html = HtmlFormatter.generateList(students, type);
         out.write(html);
     }
 }

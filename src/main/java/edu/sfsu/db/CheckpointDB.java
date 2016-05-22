@@ -133,13 +133,19 @@ public class CheckpointDB extends DB {
         }
     }
 
-    public List<Student> generate413AdvisingList() {
+    public List<Student> generateList(String type) {
         List<Student> list = new ArrayList<>();
         Connection connection = null;
         try {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
-            String query = "select * from " + TABLE_NAME + " where " + KEY_ADVISING_413 + " <> ''";
+            String query = "select * from " + TABLE_NAME;
+            if (type.equals("413")) {
+                query += " where " + KEY_ADVISING_413 + " <> ''";
+            }
+            if (type.equals("graduated")) {
+                query += " where " + KEY_SUBMITTED_APPL + " <> ''";
+            }
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
