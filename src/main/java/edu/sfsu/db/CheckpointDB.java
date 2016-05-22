@@ -78,8 +78,6 @@ public class CheckpointDB extends DB {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // student.name = rs.getString(KEY_STUDENT_NAME);
-                // student.email = rs.getString(KEY_STUDENT_EMAIL);
                 student.checkpointOralPresentation = rs.getString(KEY_ORAL_PRESENTATION);
                 student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
                 student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);
@@ -141,12 +139,14 @@ public class CheckpointDB extends DB {
         try {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
-            String query = "select * from " + TABLE_NAME;// + " where " + KEY_ADVISING_413 + " <> ''";
+            String query = "select * from " + TABLE_NAME + " where " + KEY_ADVISING_413 + " <> ''";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Student student = new Student(rs.getString(KEY_STUDENT_ID));
+                student.name = rs.getString(KEY_STUDENT_NAME);
+                student.email = rs.getString(KEY_STUDENT_EMAIL);
                 student.checkpointOralPresentation = rs.getString(KEY_ORAL_PRESENTATION);
                 student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
                 student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);

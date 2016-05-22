@@ -170,10 +170,6 @@ public class AdvisingServlet extends HttpServlet {
 
     private void process413AdvisingList(PrintWriter out) {
         List<Student> students = checkpointDB.generate413AdvisingList();
-        campusDB.getStudentInfo(students);
-        for (Student student : students) {
-            checkpointDB.updateCheckpoints(student.id, student.name, student.email, student.checkpointOralPresentation, student.checkpointAdvising413, student.checkpointSubmittedApplication);
-        }
         String html = HtmlFormatter.generate413AdvisingList(students);
         out.write(html);
     }
