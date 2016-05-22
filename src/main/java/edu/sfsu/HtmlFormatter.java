@@ -72,6 +72,8 @@ public class HtmlFormatter {
     private static String generateGeneralSection(Student student) {
         String html = "<div class='general'>";
         html += "<h5>General</h5>";
+        html += String.format("<input type='hidden' id='student_name' value='%s'>", student.name);
+        html += String.format("<input type='hidden' id='student_email' value='%s'>", student.email);
         html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp'>";
         html += "<thead>";
         html += "<tr>";

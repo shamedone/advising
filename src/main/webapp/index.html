@@ -113,6 +113,8 @@
         }
 
         function update_checkpoints(id) {
+            var studentName = document.getElementById('student_name').value;
+            var studentEmail = document.getElementById('student_email').value;
             var checkpointOralPresentationNode = document.getElementById('date_oral_presentation');
             var checkpointAdvising413Node = document.getElementById('date_advising_413');
             var checkpointSubmittedApplNode = document.getElementById('date_submitted_appl');
@@ -150,6 +152,8 @@
 
             show_spinner();
             $.post("update-checkpoints", {token: token, id: id,
+                studentName: studentName,
+                studentEmail: studentEmail,
                 checkpointOralPresentation: checkpointOralPresentation,
                 checkpointAdvising413: checkpointAdvising413,
                 checkpointSubmittedAppl: checkpointSubmittedAppl}, function(data, status) {

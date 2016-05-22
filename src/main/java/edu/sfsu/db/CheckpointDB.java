@@ -8,8 +8,9 @@ public class CheckpointDB extends DB {
 
     final static private String DB_NAME               = "ADVISING";
     final static private String TABLE_NAME            = "CHECKPOINTS";
-
     final static private String KEY_STUDENT_ID        = "STUDENT_ID";
+    final static private String KEY_STUDENT_NAME      = "STUDENT_NAME";
+    final static private String KEY_STUDENT_EMAIL     = "STUDENT_EMAIL";
     final static private String KEY_ORAL_PRESENTATION = "ORAL_PRESENTATION";
     final static private String KEY_ADVISING_413      = "ADVISING_413";
     final static private String KEY_SUBMITTED_APPL    = "SUBMITTED_APPL";
@@ -48,7 +49,8 @@ public class CheckpointDB extends DB {
             }
             connection.setCatalog(DB_NAME);
             String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" + KEY_STUDENT_ID
-                    + " VARCHAR(11) NOT NULL PRIMARY KEY, " + KEY_ORAL_PRESENTATION + " TEXT, "
+                    + " VARCHAR(11) NOT NULL PRIMARY KEY, " + KEY_STUDENT_NAME + " TEXT, "
+                    + KEY_STUDENT_EMAIL + " TEXT, " + KEY_ORAL_PRESENTATION + " TEXT, "
                     + KEY_ADVISING_413 + " TEXT, " + KEY_SUBMITTED_APPL + " TEXT)";
             Statement stmt = connection.createStatement();
             stmt.execute(sql);
@@ -76,6 +78,8 @@ public class CheckpointDB extends DB {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                // student.name = rs.getString(KEY_STUDENT_NAME);
+                // student.email = rs.getString(KEY_STUDENT_EMAIL);
                 student.checkpointOralPresentation = rs.getString(KEY_ORAL_PRESENTATION);
                 student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
                 student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);
@@ -94,23 +98,29 @@ public class CheckpointDB extends DB {
         }
     }
 
-    public void updateCheckpoints(String id, String checkpointOralPresentation,
-            String checkpointAdvising413, String checkpointSubmittedApplication) {
+    public void updateCheckpoints(String id, String studentName, String studentEmail,
+            String checkpointOralPresentation, String checkpointAdvising413,
+            String checkpointSubmittedApplication) {
         Connection connection = null;
         try {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
             String query = "insert into " + TABLE_NAME + "(" + KEY_STUDENT_ID + ", "
-                    + KEY_ORAL_PRESENTATION + ", " + KEY_ADVISING_413 + ", " + KEY_SUBMITTED_APPL
-                    + ") values (?, ?, ?, ?) on duplicate key update ";
+                    + KEY_STUDENT_NAME + ", " + KEY_STUDENT_EMAIL + ", " + KEY_ORAL_PRESENTATION
+                    + ", " + KEY_ADVISING_413 + ", " + KEY_SUBMITTED_APPL
+                    + ") values (?, ?, ?, ?, ?, ?) on duplicate key update ";
+            query += KEY_STUDENT_NAME + " = values(" + KEY_STUDENT_NAME + "), ";
+            query += KEY_STUDENT_EMAIL + " = values(" + KEY_STUDENT_EMAIL + "), ";
             query += KEY_ORAL_PRESENTATION + " = values(" + KEY_ORAL_PRESENTATION + "), ";
             query += KEY_ADVISING_413 + " = values(" + KEY_ADVISING_413 + "), ";
             query += KEY_SUBMITTED_APPL + " = values(" + KEY_SUBMITTED_APPL + ")";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, id);
-            ps.setString(2, checkpointOralPresentation);
-            ps.setString(3, checkpointAdvising413);
-            ps.setString(4, checkpointSubmittedApplication);
+            ps.setString(2, studentName);
+            ps.setString(3, studentEmail);
+            ps.setString(4, checkpointOralPresentation);
+            ps.setString(5, checkpointAdvising413);
+            ps.setString(6, checkpointSubmittedApplication);
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -131,7 +141,7 @@ public class CheckpointDB extends DB {
         try {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
-            String query = "select * from " + TABLE_NAME + " where " + KEY_ADVISING_413 + " <> ''";
+            String query = "select * from " + TABLE_NAME;// + " where " + KEY_ADVISING_413 + " <> ''";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 

@@ -120,11 +120,13 @@ public class AdvisingServlet extends HttpServlet {
 
         if (path.equals("/update-checkpoints")) {
             String id = request.getParameter("id");
+            String studentName = request.getParameter("studentName");
+            String studentEmail = request.getParameter("studentEmail");
             String checkpointOralPresentation = request.getParameter("checkpointOralPresentation");
             String checkpointAdvising413 = request.getParameter("checkpointAdvising413");
             String checkpointSubmittedAppl = request.getParameter("checkpointSubmittedAppl");
-            processUpdateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
-                    checkpointSubmittedAppl);
+            processUpdateCheckpoints(id, studentName, studentEmail, checkpointOralPresentation,
+                    checkpointAdvising413, checkpointSubmittedAppl);
         }
 
         if (path.equals("/generate-413-list")) {
@@ -159,15 +161,19 @@ public class AdvisingServlet extends HttpServlet {
         commentDB.updateComment(id, course, comment);
     }
 
-    private void processUpdateCheckpoints(String id, String checkpointOralPresentation,
-            String checkpointAdvising413, String checkpointSubmittedApplication) {
-        checkpointDB.updateCheckpoints(id, checkpointOralPresentation, checkpointAdvising413,
-                checkpointSubmittedApplication);
+    private void processUpdateCheckpoints(String id, String studentName, String studentEmail,
+            String checkpointOralPresentation, String checkpointAdvising413,
+            String checkpointSubmittedApplication) {
+        checkpointDB.updateCheckpoints(id, studentName, studentEmail, checkpointOralPresentation,
+                checkpointAdvising413, checkpointSubmittedApplication);
     }
 
     private void process413AdvisingList(PrintWriter out) {
         List<Student> students = checkpointDB.generate413AdvisingList();
         campusDB.getStudentInfo(students);
+        for (Student student : students) {
+            checkpointDB.updateCheckpoints(student.id, student.name, student.email, student.checkpointOralPresentation, student.checkpointAdvising413, student.checkpointSubmittedApplication);
+        }
         String html = HtmlFormatter.generate413AdvisingList(students);
         out.write(html);
     }
