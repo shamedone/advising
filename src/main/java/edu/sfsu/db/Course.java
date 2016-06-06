@@ -30,6 +30,10 @@ public class Course {
     }
 
     public boolean isPassingGrade() {
-        return PASSING_GRADES.contains(grade);
+        if (PASSING_GRADES.contains(grade)) {
+            return true;
+        }
+        // Gotta love those exceptions
+        return courseName.equals("CSC 412") && "CR".equals(grade);
     }
 }
