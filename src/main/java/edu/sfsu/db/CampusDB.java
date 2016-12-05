@@ -110,7 +110,7 @@ public class CampusDB extends DB {
                 }
             }
         }
-        return student.courses.size() == 0 ? null : student;
+        return student.name.equals("") ? null : student;
     }
 
     public void getStudentInfo(List<Student> students) {
