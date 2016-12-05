@@ -59,7 +59,17 @@ public class Util {
 
         // Semester
         //TODO Hack
-        semester = "2163";
+        char term;
+        if (month == 0) {
+            term = '1'; // Winter
+        } else if (month < 5) {
+            term = '3'; // Spring
+        } else if (month < 7) {
+            term = '5'; // Summer
+        } else {
+            term = '7'; // Fall
+        }
+        semester += term;
         return semester;
     }
 
