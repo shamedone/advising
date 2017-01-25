@@ -179,6 +179,12 @@
         }
 
         function generateList(button, type) {
+            var url = "generate-list?token=" + token + "&type=" + type;
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("src", url);
+            iframe.setAttribute("style", "display: none");
+            document.body.appendChild(iframe);
+            /*
             button.disabled = true;
             show_spinner();
             $.post("generate-list", {token: token, type: type}, function(data, status) {
@@ -188,6 +194,7 @@
                 listWindow.document.write(data);
                 listWindow.document.close();
             });
+            */
             return false;
         }
     </script>

@@ -131,6 +131,9 @@ public class AdvisingServlet extends HttpServlet {
 
         if (path.equals("/generate-list")) {
             String type = request.getParameter("type");
+            response.setContentType("text/csv");
+            response.addHeader("Content-Disposition", "attachment; filename=list-" + type + ".csv");
+            response.addHeader("Pragma", "no-cache");
             processGenerateList(out, type);
         }
         out.close();
@@ -171,7 +174,8 @@ public class AdvisingServlet extends HttpServlet {
 
     private void processGenerateList(PrintWriter out, String type) {
         List<Student> students = checkpointDB.generateList(type);
-        String html = HtmlFormatter.generateList(students, type);
-        out.write(html);
+        //String html = HtmlFormatter.generateList(students, type);
+        //out.write(html);
+        CSVFormatter.generateList(out, students, type);
     }
 }
