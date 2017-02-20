@@ -26,19 +26,36 @@ public class CampusDB extends DB {
         Connection connection = null;
         try {
             connection = getConnection();
-            // Courses taken at SFSU
-            String query = "select * from CMSCOMMON.SFO_CR_MAIN_MV where emplid = ?";
+
+            // Lookup student and retrieve name and email address
+            String query = "SELECT N.EMPLID, N.LAST_NAME, N.FIRST_NAME, N.MIDDLE_NAME, E.EMAIL_ADDR " +
+                    "FROM CMSCOMMON.SFO_EF_PERSON_NAME_MV N " +
+                    ", CMSCOMMON.SFO_EMAILADR_MV E " +
+                    "WHERE N.EMPLID = ? " +
+                    "AND N.EMPLID = E.EMPLID(+) " +
+                    "AND N.NAME_TYPE = 'PRI' " +
+                    "AND E.ADDR_TYPE = 'OCMP'";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                // Student not found
+                rs.close();
+                ps.close();
+                return null;
+            }
+            student.name = rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
+            student.email = rs.getString("EMAIL_ADDR");
+            rs.close();
+            ps.close();
 
-            boolean first = true;
+            // Courses taken at SFSU
+            query = "select * from CMSCOMMON.SFO_CR_MAIN_MV where emplid = ?";
+            ps = connection.prepareStatement(query);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+
             while (rs.next()) {
-                if (first) {
-                    first = false;
-                    student.name = rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
-                    student.email = rs.getString("EMAIL_ADDR");
-                }
                 String semester = rs.getString("STRM");
                 String grade = rs.getString("CRSE_GRADE_OFF").replaceAll(" ", "");
                 if (!grade.equals("") || semester.equals(currentSemester)) {
@@ -110,7 +127,7 @@ public class CampusDB extends DB {
                 }
             }
         }
-        return student.name.equals("") ? null : student;
+        return student;
     }
 
     public void getStudentInfo(List<Student> students) {
