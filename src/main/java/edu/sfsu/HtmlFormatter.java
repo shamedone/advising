@@ -3,7 +3,10 @@ package edu.sfsu;
 import edu.sfsu.db.Course;
 import edu.sfsu.db.CourseRequirements;
 import edu.sfsu.db.Student;
+import edu.sfsu.sniplet.HTMLSniplet;
 
+import javax.servlet.ServletContext;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,158 +24,73 @@ public class HtmlFormatter {
     }
 
 
-    private static String generateCheckpoint(String studentId, String date, String checkpointDescr,
-            String checkpointId, boolean showDateField) {
-        String html = "";
-        html += "<tr>";
-        html += "<td class='mdl-data-table__cell--non-numeric'>";
-        html += String
-                .format("<label id='label_%s' class='mdl-switch mdl-js-switch mdl-js-ripple-effect' for='%s'",
-                        checkpointId, checkpointId);
+    private static HTMLSniplet studentInfoFragment;
 
-        if (!showDateField) {
-            html += " style='display: none;'";
-        }
-
-        html += ">";
-        html += String.format("<input type='checkbox' id='%s' class='mdl-switch__input' ",
-                checkpointId);
-        html += String.format("onclick=\"return checkpoint_toggled('%s', '%s');\"", studentId,
-                checkpointId);
-        if (date != null && !"".equals(date)) {
-            html += " checked";
-        }
-        html += "/>";
-        html += "<span class='mdl-switch__label'></span>";
-        html += "</label>";
-        html += "</td>";
-        html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                checkpointDescr);
-        html += "<td class='mdl-data-table__cell--non-numeric'>";
-        html += String.format("<form onsubmit=\"return update_checkpoints('%s');\">", studentId);
-        html += "<div class='mdl-textfield mdl-js-textfield'>";
-        html += String.format(
-                "<input class='mdl-textfield__input' type='text' size='10' id='date_%s'",
-                checkpointId);
-
-        if (date != null && !"".equals(date)) {
-            html += String.format(" value='%s'", e(date));
-        }
-
-        html += "/>";
-        html += String.format("<label class='mdl-textfield__label' for='date_%s'>", checkpointId);
-        html += showDateField ? "Date" : "Comment";
-        html += "...</label>";
-        html += "</div>";
-        html += "</form>";
-        html += "</td>";
-        html += "</tr>";
-        return html;
+    public static void init(ServletContext context) {
+        InputStream is = context.getResourceAsStream("/WEB-INF/classes/student_sniplet.html");
+        studentInfoFragment = HTMLSniplet.fromInputStream(is);
     }
 
-    private static String generateGeneralSection(Student student) {
-        String html = "<div class='general'>";
-        html += "<h5>General</h5>";
-        html += String.format("<input type='hidden' id='student_name' value='%s'>", student.name);
-        html += String.format("<input type='hidden' id='student_email' value='%s'>", student.email);
-        html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp'>";
-        html += "<thead>";
-        html += "<tr>";
-        html += "<th class='mdl-data-table__cell--non-numeric'></th>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Checkpoint</th>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Date/Comment</th>";
-        html += "</tr>";
-        html += "</thead>";
-        html += "<tbody>";
-        html += generateCheckpoint(student.id, student.checkpointOralPresentation,
-                "Senior Oral Presentation", "oral_presentation", false);
-        html += generateCheckpoint(student.id, student.checkpointAdvising413, "413 Advising",
-                "advising_413", true);
-        html += generateCheckpoint(student.id, student.checkpointSubmittedApplication,
-                "Submitted Graduate Application", "submitted_appl", true);
-        html += "</tbody>";
-        html += "</table>";
-        html += "</div>";
-        return html;
+    private static void generateCheckpoint(HTMLSniplet fragment, String studentId, String date, String checkpointDescr,
+                                           String checkpointId, boolean showDateField) {
+        HTMLSniplet checkpoint = fragment.instantiate("checkpoint");
+        checkpoint.p("checkpoint_id", checkpointId);
+        checkpoint.p("student_id", studentId);
+        checkpoint.p("checkpoint_descr", checkpointDescr);
+        checkpoint.p("style", showDateField ? "" : " style='display: none;'");
+        checkpoint.p("checked", (date != null && !"".equals(date)) ? " checked" : "");
+        checkpoint.p("date_value", (date != null && !"".equals(date)) ? String.format(" value='%s'", e(date)) : "");
+        checkpoint.p("label", showDateField ? "Date" : "Comment");
     }
 
-    private static String generateCommentField(Student student, String courseName) {
+    private static void generateCommentField(HTMLSniplet fragment, Student student, String courseName) {
+        HTMLSniplet comment = fragment.instantiate("comment");
         String id = courseName.replace(" ", "_");
-        String html = "<td class='mdl-data-table__cell--non-numeric'>";
-        html += String.format("<form onsubmit=\"return update_comment('%s', '%s');\">", student.id,
-                id);
-        html += "<div class='mdl-textfield mdl-js-textfield full-width'>";
-        html += String.format("<input class='mdl-textfield__input full-width' type='text' id='%s'",
-                id);
-        if (student.comments.containsKey(id)) {
-            html += String.format(" value='%s'", e(student.comments.get(id)));
-        }
-        html += "/>";
-        html += String
-                .format("<label class='mdl-textfield__label' for='%s'>Comment...</label>", id);
-        html += "</div>";
-        html += "</form>";
-        html += "</td>";
-        return html;
+        comment.p("student_id", student.id);
+        comment.p("course_id", id);
+        comment.p("comment", (student.comments.containsKey(id)) ? String.format(" value='%s'", e(student.comments.get(id))) : "");
     }
 
-    private static String generateClassList(Student student, String heading, List<Object> classes,
-            boolean showMissing, boolean showDetails) {
-        String html = "";
-        html += String.format("<h5>%s</h5>", heading);
-        html += "<table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width'>";
-        html += "<thead>";
-        html += "<tr>";
-        html += "<th class='mdl-data-table__cell--non-numeric'>Course</th>";
+    private static void generateClassList(HTMLSniplet fragment, Student student, String heading, List<Object> classes,
+                                          boolean showMissing, boolean showDetails) {
+        HTMLSniplet section = fragment.instantiate("section");
+        section.p("heading", heading);
         if (showDetails) {
-            html += "<th class='mdl-data-table__cell--non-numeric'>Transfer</th>";
-            html += "<th class='mdl-data-table__cell--non-numeric'>Semester</th>";
-            html += "<th class='mdl-data-table__cell--non-numeric'>Grade</th>";
+            section.instantiate("details");
         }
-        html += "<th class='mdl-data-table__cell--non-numeric full-width'>Comment</th>";
-        html += "</tr>";
-        html += "</thead>";
-        html += "<tbody>";
         for (Object clazz : classes) {
             Course course = student.requirementFor(clazz);
             if (course == null) {
                 if (showMissing) {
+                    HTMLSniplet courseFragment = section.instantiate("course");
                     String courseName = clazz instanceof String ? (String) clazz
                             : ((ArrayList<String>) clazz).get(0);
-                    html += "<tr>";
-                    html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                            replaceSpaces(courseName));
+                    courseFragment.p("course_name", replaceSpaces(courseName));
                     if (showDetails) {
-                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
-                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
-                        html += "<td class='mdl-data-table__cell--non-numeric'></td>";
+                        HTMLSniplet details = courseFragment.instantiate("details");
+                        details.p("transfer", "");
+                        details.p("semester", "");
+                        details.p("grade", "");
                     }
-                    html += generateCommentField(student, courseName);
-                    html += "</tr>";
+                    generateCommentField(courseFragment, student, courseName);
                 }
                 continue;
             }
-            html += "<tr>";
-            html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                    replaceSpaces(course.courseName));
+            HTMLSniplet courseFragment = section.instantiate("course");
+            courseFragment.p("course_name", replaceSpaces(course.courseName));
             if (showDetails) {
-                html += "<td class='mdl-data-table__cell--non-numeric'>";
+                HTMLSniplet details = courseFragment.instantiate("details");
+                String transfer = "";
                 if (course.transferCourse != null && course.transferSchool != null) {
-                    html += String.format("%s (%s)", replaceSpaces(course.transferCourse),
+                    transfer = String.format("%s (%s)", replaceSpaces(course.transferCourse),
                             replaceSpaces(course.transferSchool));
                 }
-                html += "</td>";
-                html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                        replaceSpaces(course.semester));
-                html += String.format("<td class='mdl-data-table__cell--non-numeric'>%s</td>",
-                        course.grade);
+                details.p("transfer", transfer);
+                details.p("semester", replaceSpaces(course.semester));
+                details.p("grade", course.grade);
             }
-            html += generateCommentField(student, course.courseName);
-            html += "</tr>";
+            generateCommentField(courseFragment, student, course.courseName);
         }
-        html += "</tbody>";
-        html += "</table>";
-        return html;
     }
 
     private static String replaceSpaces(String s) {
@@ -184,52 +102,21 @@ public class HtmlFormatter {
     }
 
     public static String generateHtml(Student student) {
-        String html = "";
-        html += String.format("<h4>%s (%s) &lt;<a href='mailto:%s'>%s</a>&gt;</h4>", student.name,
-                student.id, student.email, student.email);
+        HTMLSniplet fragment = studentInfoFragment.copy();
+        fragment.p("student_name", student.name);
+        fragment.p("student_email", student.email);
+        fragment.p("student_id", student.id);
 
-        html += generateGeneralSection(student);
-        html += "<div class='vertical-padding'></div>";
-        html += generateClassList(student, "Core", CourseRequirements.core, true, true);
-        html += "<div class='vertical-padding'></div>";
-        html += generateClassList(student, "Electives", CourseRequirements.electives, false, true);
-        html += "<div class='vertical-padding'></div>";
-        html += generateClassList(student, "Transfers", transfers, true, false);
-        return html;
-    }
+        generateCheckpoint(fragment, student.id, student.checkpointOralPresentation,
+                "Senior Oral Presentation", "oral_presentation", false);
+        generateCheckpoint(fragment, student.id, student.checkpointAdvising413, "413 Advising",
+                "advising_413", true);
+        generateCheckpoint(fragment, student.id, student.checkpointSubmittedApplication,
+                "Submitted Graduate Application", "submitted_appl", true);
 
-    public static String generateList(List<Student> students, String type) {
-        String title = "General";
-        if (type.equals("413")) {
-            title = "CSC 413 Advising List";
-        }
-        if (type.equals("graduated")) {
-            title = "Graduated Students";
-        }
-        String html = String
-                .format("<html><head><title>%s</title><link rel='stylesheet' href='material-print.css'></head><body>",
-                        title);
-        html += "<table><thead>";
-        html += "<th>Student ID</th>";
-        html += "<th>Student Name</th>";
-        html += "<th>Date</th>";
-        html += "</thead><tbody>";
-        for (Student student : students) {
-            html += "<tr>";
-            html += String.format("<td>%s</td>", student.id);
-            html += String.format("<td>%s</td>", student.name);
-            String date = "-";
-            if (type.equals("413")) {
-                date = student.checkpointAdvising413;
-            }
-            if (type.equals("graduated")) {
-                date = student.checkpointSubmittedApplication;
-            }
-            html += String.format("<td>%s</td>", date);
-            html += "</tr>";
-        }
-        html += "</tbody></table>";
-        html += "</body></html>";
-        return html;
+        generateClassList(fragment, student, "Core", CourseRequirements.core, true, true);
+        generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
+        generateClassList(fragment, student, "Transfers", transfers, true, false);
+        return fragment.render().toString();
     }
 }

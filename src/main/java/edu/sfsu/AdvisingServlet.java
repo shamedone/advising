@@ -30,6 +30,7 @@ public class AdvisingServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext context = config.getServletContext();
+        HtmlFormatter.init(context);
 
         Properties props = new Properties();
 
@@ -174,8 +175,6 @@ public class AdvisingServlet extends HttpServlet {
 
     private void processGenerateList(PrintWriter out, String type) {
         List<Student> students = checkpointDB.generateList(type);
-        //String html = HtmlFormatter.generateList(students, type);
-        //out.write(html);
         CSVFormatter.generateList(out, students, type);
     }
 }
