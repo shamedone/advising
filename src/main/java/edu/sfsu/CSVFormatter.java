@@ -22,9 +22,11 @@ public class CSVFormatter {
                 if (type.equals("graduated")) {
                     date = student.checkpointSubmittedApplication;
                 }
-                String[] row = {student.id, student.name, date};
+                String[] row = {student.id, student.lastName, student.firstName, date};
                 writer.writeNext(row);
             }
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

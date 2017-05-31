@@ -4,12 +4,12 @@ import java.sql.*;
 
 public class CommentDB extends DB {
 
-    final static private String DB_NAME = "ADVISING";
-    final static private String TABLE_NAME = "COMMENTS";
+    final static protected String DB_NAME = "ADVISING";
+    final static protected String TABLE_NAME = "COMMENTS";
 
-    final static private String KEY_STUDENT_ID = "STUDENT_ID";
-    final static private String KEY_COURSE = "COURSE";
-    final static private String KEY_COMMENT = "COMMENT";
+    final static protected String KEY_STUDENT_ID = "STUDENT_ID";
+    final static protected String KEY_COURSE = "COURSE";
+    final static protected String KEY_COMMENT = "COMMENT";
 
 
     public CommentDB(String driver, String url, String user, String passwd) {

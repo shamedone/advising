@@ -55,7 +55,8 @@ public class CampusDB extends DB {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            student.name = rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
+            student.firstName = rs.getString("FIRST_NAME");
+            student.lastName = rs.getString("LAST_NAME");
             student.email = rs.getString("EMAIL_ADDR");
         }
         rs.close();
@@ -164,7 +165,7 @@ public class CampusDB extends DB {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (student.name.equals("")) {
+        if (student.firstName.equals("") && student.lastName.equals("")) {
             return null;
         }
         return student;
@@ -181,7 +182,8 @@ public class CampusDB extends DB {
                 ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    student.name = rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME");
+                    student.firstName = rs.getString("FIRST_NAME");
+                    student.lastName = rs.getString("LAST_NAME");
                     student.email = rs.getString("EMAIL_ADDR");
                 }
                 rs.close();

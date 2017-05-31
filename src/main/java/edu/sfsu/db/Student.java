@@ -9,7 +9,8 @@ public class Student {
 
     public Student(String id) {
         this.id = id;
-        name = "";
+        firstName = "";
+        lastName = "";
         email = "";
         courses = new ArrayList<>();
         comments = new HashMap<>();
@@ -17,7 +18,8 @@ public class Student {
 
 
     public String              id;
-    public String              name;
+    public String              firstName;
+    public String              lastName;
     public String              email;
     public String              checkpointOralPresentation;
     public String              checkpointAdvising413;

@@ -91,12 +91,13 @@ public class AdvisingServlet extends HttpServlet {
 
         if (path.equals("/update-checkpoints")) {
             String id = request.getParameter("id");
-            String studentName = request.getParameter("studentName");
+            String studentFirstName = request.getParameter("studentFirstName");
+            String studentLastName = request.getParameter("studentLastName");
             String studentEmail = request.getParameter("studentEmail");
             String checkpointOralPresentation = request.getParameter("checkpointOralPresentation");
             String checkpointAdvising413 = request.getParameter("checkpointAdvising413");
             String checkpointSubmittedAppl = request.getParameter("checkpointSubmittedAppl");
-            processUpdateCheckpoints(id, studentName, studentEmail, checkpointOralPresentation,
+            processUpdateCheckpoints(id, studentFirstName, studentLastName, studentEmail, checkpointOralPresentation,
                     checkpointAdvising413, checkpointSubmittedAppl);
         }
 
@@ -136,10 +137,10 @@ public class AdvisingServlet extends HttpServlet {
         commentDB.updateComment(id, course, comment);
     }
 
-    private void processUpdateCheckpoints(String id, String studentName, String studentEmail,
+    private void processUpdateCheckpoints(String id, String studentFirstName, String studentLastName, String studentEmail,
             String checkpointOralPresentation, String checkpointAdvising413,
             String checkpointSubmittedApplication) {
-        checkpointDB.updateCheckpoints(id, studentName, studentEmail, checkpointOralPresentation,
+        checkpointDB.updateCheckpoints(id, studentFirstName, studentLastName, studentEmail, checkpointOralPresentation,
                 checkpointAdvising413, checkpointSubmittedApplication);
     }
 

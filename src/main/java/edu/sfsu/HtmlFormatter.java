@@ -103,7 +103,8 @@ public class HtmlFormatter {
 
     public static String generateHtml(Student student) {
         HTMLSniplet fragment = studentInfoFragment.copy();
-        fragment.p("student_name", student.name);
+        fragment.p("student_first_name", student.firstName);
+        fragment.p("student_last_name", student.lastName);
         fragment.p("student_email", student.email);
         fragment.p("student_id", student.id);
 

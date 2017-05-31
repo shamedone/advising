@@ -21,7 +21,7 @@ public class DB {
         dataSource.setUrl(url);
     }
 
-    protected Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
@@ -34,7 +34,7 @@ public class DB {
         try {
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
-            System.out.println("JDBC driver '" + driver + "' ismissing");
+            System.out.println("JDBC driver '" + driver + "' is missing");
             throw new RuntimeException(e);
         }
 
