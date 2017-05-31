@@ -52,39 +52,9 @@ public class AdvisingServlet extends HttpServlet {
         password = props.getProperty("PASSWORD");
         token = UUID.randomUUID().toString();
 
-        String campusDriver = props.getProperty("CAMPUS_DRIVER");
-        String campusUrl = props.getProperty("CAMPUS_URL");
-        String campusUsername = props.getProperty("CAMPUS_USERNAME");
-        String campusPasswd = props.getProperty("CAMPUS_PASSWD");
-
-        String commentDriver = props.getProperty("COMMENT_DRIVER");
-        String commentUrl = props.getProperty("COMMENT_URL");
-        String commentUsername = props.getProperty("COMMENT_USERNAME");
-        String commentPasswd = props.getProperty("COMMENT_PASSWD");
-
-        String checkpointDriver = props.getProperty("CHECKPOINT_DRIVER");
-        String checkpointUrl = props.getProperty("CHECKPOINT_URL");
-        String checkpointUsername = props.getProperty("CHECKPOINT_USERNAME");
-        String checkpointPasswd = props.getProperty("CHECKPOINT_PASSWD");
-
-        try {
-            Class.forName(campusDriver);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Oracle JDBC Driver missing");
-            return;
-        }
-
-        try {
-            Class.forName(commentDriver);
-        } catch (ClassNotFoundException e) {
-            System.out.println("MySQL JDBC Driver missing");
-            return;
-        }
-
-        commentDB = new CommentDB(commentDriver, commentUrl, commentUsername, commentPasswd);
-        checkpointDB = new CheckpointDB(checkpointDriver, checkpointUrl, checkpointUsername,
-                checkpointPasswd);
-        campusDB = new CampusDB(campusDriver, campusUrl, campusUsername, campusPasswd);
+        commentDB = (CommentDB) DB.init(CommentDB.class, "COMMENT", props);
+        checkpointDB = (CheckpointDB) DB.init(CheckpointDB.class, "CHECKPOINT", props);
+        campusDB = (CampusDB) DB.init(CampusDB.class, "CAMPUS", props);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
