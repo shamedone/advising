@@ -109,7 +109,8 @@ public class HTMLSniplet extends Sniplet {
     }
 
     public HTMLSniplet p(String param, String value) {
-        params.put("%%" + param + "%%", value);
+        String v = (value == null) ? "" : value;
+        params.put("%%" + param + "%%", v);
         return this;
     }
 

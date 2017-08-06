@@ -76,7 +76,7 @@ public class UpdatedCheckpointDB extends CheckpointDB {
             getCheckpoints(student);
             updateCheckpoints(student.id,student.firstName, student.lastName, student.email,
                     student.checkpointOralPresentation, student.checkpointAdvising413,
-                    student.checkpointSubmittedApplication);
+                    student.checkpointSubmittedApplication, student.comment);
         }
     }
 }

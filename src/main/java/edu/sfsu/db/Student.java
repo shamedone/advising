@@ -12,6 +12,7 @@ public class Student {
         firstName = "";
         lastName = "";
         email = "";
+        comment = "";
         courses = new ArrayList<>();
         comments = new HashMap<>();
     }
@@ -21,6 +22,7 @@ public class Student {
     public String              firstName;
     public String              lastName;
     public String              email;
+    public String              comment;
     public String              checkpointOralPresentation;
     public String              checkpointAdvising413;
     public String              checkpointSubmittedApplication;

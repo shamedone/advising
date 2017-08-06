@@ -97,8 +97,9 @@ public class AdvisingServlet extends HttpServlet {
             String checkpointOralPresentation = request.getParameter("checkpointOralPresentation");
             String checkpointAdvising413 = request.getParameter("checkpointAdvising413");
             String checkpointSubmittedAppl = request.getParameter("checkpointSubmittedAppl");
+            String comments = request.getParameter("comments");
             processUpdateCheckpoints(id, studentFirstName, studentLastName, studentEmail, checkpointOralPresentation,
-                    checkpointAdvising413, checkpointSubmittedAppl);
+                    checkpointAdvising413, checkpointSubmittedAppl, comments);
         }
 
         if (path.equals("/generate-list")) {
@@ -139,9 +140,9 @@ public class AdvisingServlet extends HttpServlet {
 
     private void processUpdateCheckpoints(String id, String studentFirstName, String studentLastName, String studentEmail,
             String checkpointOralPresentation, String checkpointAdvising413,
-            String checkpointSubmittedApplication) {
+            String checkpointSubmittedApplication, String comments) {
         checkpointDB.updateCheckpoints(id, studentFirstName, studentLastName, studentEmail, checkpointOralPresentation,
-                checkpointAdvising413, checkpointSubmittedApplication);
+                checkpointAdvising413, checkpointSubmittedApplication, comments);
     }
 
     private void processGenerateList(PrintWriter out, String type) {

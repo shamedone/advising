@@ -15,6 +15,7 @@ public class CheckpointDB extends DB {
     final static protected String KEY_ORAL_PRESENTATION  = "ORAL_PRESENTATION";
     final static protected String KEY_ADVISING_413       = "ADVISING_413";
     final static protected String KEY_SUBMITTED_APPL     = "SUBMITTED_APPL";
+    final static protected String KEY_COMMENTS           = "COMMENTS";
 
 
     public CheckpointDB(String driver, String url, String user, String passwd) {
@@ -53,7 +54,8 @@ public class CheckpointDB extends DB {
                     + " VARCHAR(11) NOT NULL PRIMARY KEY, " + KEY_STUDENT_FIRST_NAME + " TEXT, "
                     + KEY_STUDENT_LAST_NAME + " TEXT, "
                     + KEY_STUDENT_EMAIL + " TEXT, " + KEY_ORAL_PRESENTATION + " TEXT, "
-                    + KEY_ADVISING_413 + " TEXT, " + KEY_SUBMITTED_APPL + " TEXT)";
+                    + KEY_ADVISING_413 + " TEXT, " + KEY_SUBMITTED_APPL + " TEXT, "
+                    + KEY_COMMENTS + " TEXT)";
             Statement stmt = connection.createStatement();
             stmt.execute(sql);
             stmt.close();
@@ -80,6 +82,7 @@ public class CheckpointDB extends DB {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                student.comment = rs.getString(KEY_COMMENTS);
                 student.checkpointOralPresentation = rs.getString(KEY_ORAL_PRESENTATION);
                 student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
                 student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);
@@ -100,21 +103,22 @@ public class CheckpointDB extends DB {
 
     public void updateCheckpoints(String id, String studentFirstName, String studentLastName, String studentEmail,
             String checkpointOralPresentation, String checkpointAdvising413,
-            String checkpointSubmittedApplication) {
+            String checkpointSubmittedApplication, String comments) {
         Connection connection = null;
         try {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
             String query = "insert into " + TABLE_NAME + "(" + KEY_STUDENT_ID + ", "
                     + KEY_STUDENT_FIRST_NAME + ", " + KEY_STUDENT_LAST_NAME + ", " + KEY_STUDENT_EMAIL + ", " + KEY_ORAL_PRESENTATION
-                    + ", " + KEY_ADVISING_413 + ", " + KEY_SUBMITTED_APPL
-                    + ") values (?, ?, ?, ?, ?, ?, ?) on duplicate key update ";
+                    + ", " + KEY_ADVISING_413 + ", " + KEY_SUBMITTED_APPL + ", " + KEY_COMMENTS
+                    + ") values (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update ";
             query += KEY_STUDENT_FIRST_NAME + " = values(" + KEY_STUDENT_FIRST_NAME + "), ";
             query += KEY_STUDENT_LAST_NAME + " = values(" + KEY_STUDENT_LAST_NAME + "), ";
             query += KEY_STUDENT_EMAIL + " = values(" + KEY_STUDENT_EMAIL + "), ";
             query += KEY_ORAL_PRESENTATION + " = values(" + KEY_ORAL_PRESENTATION + "), ";
             query += KEY_ADVISING_413 + " = values(" + KEY_ADVISING_413 + "), ";
-            query += KEY_SUBMITTED_APPL + " = values(" + KEY_SUBMITTED_APPL + ")";
+            query += KEY_SUBMITTED_APPL + " = values(" + KEY_SUBMITTED_APPL + "), ";
+            query += KEY_COMMENTS + " = values(" + KEY_COMMENTS + ")";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, id);
             ps.setString(2, studentFirstName);
@@ -123,6 +127,7 @@ public class CheckpointDB extends DB {
             ps.setString(5, checkpointOralPresentation);
             ps.setString(6, checkpointAdvising413);
             ps.setString(7, checkpointSubmittedApplication);
+            ps.setString(8, comments);
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {

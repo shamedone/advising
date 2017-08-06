@@ -119,16 +119,19 @@
             var checkpointOralPresentationNode = document.getElementById('date_oral_presentation');
             var checkpointAdvising413Node = document.getElementById('date_advising_413');
             var checkpointSubmittedApplNode = document.getElementById('date_submitted_appl');
+            var commentsNode = document.getElementById('comments');
 
             var checkpointOralPresentation = checkpointOralPresentationNode.value;
             var checkpointAdvising413 = checkpointAdvising413Node.value;
             var checkpointSubmittedAppl = checkpointSubmittedApplNode.value;
+            var comments = commentsNode.value;
 
             // Write back the attribute so that later innerHtml will read the updated values
             // for the printing page
             checkpointOralPresentationNode.setAttribute('value', checkpointOralPresentation);
             checkpointAdvising413Node.setAttribute('value', checkpointAdvising413);
             checkpointSubmittedApplNode.setAttribute('value', checkpointSubmittedAppl);
+            commentsNode.setAttribute('value', comments);
 
             var e = document.querySelector('#label_oral_presentation').MaterialSwitch;
             if (checkpointOralPresentation !== "") {
@@ -158,7 +161,8 @@
                 studentEmail: studentEmail,
                 checkpointOralPresentation: checkpointOralPresentation,
                 checkpointAdvising413: checkpointAdvising413,
-                checkpointSubmittedAppl: checkpointSubmittedAppl}, function(data, status) {
+                checkpointSubmittedAppl: checkpointSubmittedAppl,
+                comments: comments}, function(data, status) {
                 hide_spinner();
                 show_toast();
             });

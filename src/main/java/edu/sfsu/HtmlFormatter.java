@@ -108,6 +108,8 @@ public class HtmlFormatter {
         fragment.p("student_email", student.email);
         fragment.p("student_id", student.id);
 
+        fragment.p("comments", student.comment);
+
         generateCheckpoint(fragment, student.id, student.checkpointOralPresentation,
                 "Senior Oral Presentation", "oral_presentation", false);
         generateCheckpoint(fragment, student.id, student.checkpointAdvising413, "413 Advising",
