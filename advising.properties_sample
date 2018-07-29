@@ -9,6 +9,13 @@ CAMPUS_URL      = jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl
 CAMPUS_USERNAME = <username>
 CAMPUS_PASSWD   = <password>
 
+# For testing purposes, class CampusTestDB can be used to return dummy data
+#CAMPUS_CLASS    = edu.sfsu.db.CampusTestDB
+#CAMPUS_DRIVER   = dummy
+#CAMPUS_URL      = dummy
+#CAMPUS_USERNAME = dummy
+#CAMPUS_PASSWD   = dummy
+
 # Create a local MySQL database that will be used for storing comments via:
 # mysql -u root -p
 # CREATE USER 'advisor'@'localhost' IDENTIFIED BY '<mysql-passwd>';

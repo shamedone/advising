@@ -13,6 +13,9 @@ public class DB {
     private BasicDataSource dataSource;
 
 
+    public DB() {
+    }
+
     public DB(String driver, String url, String user, String passwd) {
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName(driver);
