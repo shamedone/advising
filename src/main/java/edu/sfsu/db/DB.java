@@ -25,7 +25,15 @@ public class DB {
         return dataSource.getConnection();
     }
 
-    public static DB init(Class<? extends DB> clazz, String db, Properties props) {
+    public static DB init(String db, Properties props) {
+        Class<? extends DB> clazz;
+        String clazzName = props.getProperty(db + "_CLASS");
+        try {
+            clazz = (Class<? extends DB>) Class.forName(clazzName);
+        } catch (ClassNotFoundException e) {
+            System.out.println("DB class '" + clazzName + "' is missing");
+            throw new RuntimeException(e);
+        }
         String driver = props.getProperty(db + "_DRIVER");
         String url = props.getProperty(db + "_URL");
         String username = props.getProperty(db + "_USERNAME");

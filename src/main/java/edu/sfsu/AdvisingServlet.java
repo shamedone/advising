@@ -52,9 +52,9 @@ public class AdvisingServlet extends HttpServlet {
         password = props.getProperty("PASSWORD");
         token = UUID.randomUUID().toString();
 
-        commentDB = (CommentDB) DB.init(CommentDB.class, "COMMENT", props);
-        checkpointDB = (CheckpointDB) DB.init(CheckpointDB.class, "CHECKPOINT", props);
-        campusDB = (CampusDB) DB.init(CampusDB.class, "CAMPUS", props);
+        commentDB = (CommentDB) DB.init("COMMENT", props);
+        checkpointDB = (CheckpointDB) DB.init("CHECKPOINT", props);
+        campusDB = (CampusDB) DB.init("CAMPUS", props);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -72,7 +72,7 @@ public class AdvisingServlet extends HttpServlet {
         }
 
         String token = request.getParameter("token");
-        if (!token.equals(this.token)) {
+        if (token == null || !token.equals(this.token)) {
             out.close();
             return;
         }

@@ -1,6 +1,6 @@
 package edu.sfsu.updater;
 
-import edu.sfsu.db.CampusDB;
+import edu.sfsu.db.OracleDB;
 import edu.sfsu.db.CheckpointDB;
 import edu.sfsu.db.Student;
 
@@ -40,7 +40,7 @@ public class UpdatedCheckpointDB extends CheckpointDB {
      *     mysql -u advisor -p ADVISING < advising.sql
      * </code>
      */
-    public void updateNames(CampusDB campusDB) {
+    public void updateNames(OracleDB campusDB) {
         Connection connection = null;
         List<String> ids = new ArrayList<>();
         try {

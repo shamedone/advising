@@ -3,6 +3,7 @@
 # Password that the user has to provide in the web interface
 PASSWORD=<password>
 
+CAMPUS_CLASS    = edu.sfsu.db.OracleDB
 CAMPUS_DRIVER   = oracle.jdbc.driver.OracleDriver
 CAMPUS_URL      = jdbc:oracle:thin:@//dbgrid-scan.sfsu.edu:1521/repl
 CAMPUS_USERNAME = <username>
@@ -14,11 +15,13 @@ CAMPUS_PASSWD   = <password>
 # GRANT ALL PRIVILEGES ON * . * TO 'advisor'@'localhost';
 # FLUSH PRIVILEGES;
 
+COMMENT_CLASS    = edu.sfsu.db.CommentDB
 COMMENT_DRIVER   = com.mysql.jdbc.Driver
 COMMENT_URL      = jdbc:mysql://localhost:3307/
 COMMENT_USERNAME = advisor
 COMMENT_PASSWD   = <mysql-passwd>
 
+CHECKPOINT_CLASS    = edu.sfsu.db.CheckpointDB
 CHECKPOINT_DRIVER   = com.mysql.jdbc.Driver
 CHECKPOINT_URL      = jdbc:mysql://localhost:3307/
 CHECKPOINT_USERNAME = advisor

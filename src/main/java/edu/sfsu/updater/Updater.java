@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-import edu.sfsu.db.CampusDB;
+import edu.sfsu.db.OracleDB;
 import edu.sfsu.db.DB;
 
 public class Updater {
@@ -22,8 +22,9 @@ public class Updater {
             throw new RuntimeException(e);
         }
 
-        UpdatedCheckpointDB checkpointDB = (UpdatedCheckpointDB) DB.init(UpdatedCheckpointDB.class, "CHECKPOINT", props);
-        CampusDB campusDB = (CampusDB) DB.init(CampusDB.class, "CAMPUS", props);
+        //TODO: the following DB.init() should instantiate a UpdatedCheckpointDB
+        UpdatedCheckpointDB checkpointDB = (UpdatedCheckpointDB) DB.init("CHECKPOINT", props);
+        OracleDB campusDB = (OracleDB) DB.init("CAMPUS", props);
 
        checkpointDB.updateNames(campusDB);
     }
