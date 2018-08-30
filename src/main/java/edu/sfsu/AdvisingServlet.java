@@ -134,6 +134,19 @@ public class AdvisingServlet extends HttpServlet {
         out.println(html);
     }
 
+    private void processLookupStudent(PrintWriter out, String id, boolean readonly) throws IOException {
+        Student student = campusDB.getStudent(id);
+        String html;
+        if (student != null) {
+            commentDB.getComments(student);
+            checkpointDB.getCheckpoints(student);
+            html = HtmlFormatter.generateHtml(student, readonly);
+        } else {
+            html = "<b>Student not found</b>";
+        }
+        out.println(html);
+    }
+
     private void processUpdateComment(String id, String course, String comment) {
         commentDB.updateComment(id, course, comment);
     }
