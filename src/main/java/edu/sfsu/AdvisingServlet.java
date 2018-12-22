@@ -71,16 +71,29 @@ public class AdvisingServlet extends HttpServlet {
             return;
         }
 
+        if (path.equals("/lookup-student")) {
+            String id = request.getParameter("id");
+            String token = request.getParameter("token");
+            String readonly = request.getParameter("readonly");
+            if (token == null || !token.equals(this.token)) {
+                readonly = "true";
+            }
+            processLookupStudent(out, id, readonly);
+        }
+
         String token = request.getParameter("token");
         if (token == null || !token.equals(this.token)) {
             out.close();
             return;
         }
 
-        if (path.equals("/lookup-student")) {
+
+
+
+      /*  if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             processLookupStudent(out, id);
-        }
+        }*/
 
         if (path.equals("/update-comment")) {
             String id = request.getParameter("id");
@@ -134,16 +147,29 @@ public class AdvisingServlet extends HttpServlet {
         out.println(html);
     }
 
-    private void processLookupStudent(PrintWriter out, String id, boolean readonly) throws IOException {
+    private void processLookupStudent(PrintWriter out, String id, String readonly) throws IOException {
         Student student = campusDB.getStudent(id);
-        String html;
-        if (student != null) {
-            commentDB.getComments(student);
-            checkpointDB.getCheckpoints(student);
-            html = HtmlFormatter.generateHtml(student, readonly);
-        } else {
-            html = "<b>Student not found</b>";
+        String html = null;
+        //System.out.println("data");
+        //System.out.println(readonly);
+        boolean ro = false;
+        if (readonly.equals("true"))
+            ro = true;
+        try{
+            if (student != null) {
+                commentDB.getComments(student);
+                checkpointDB.getCheckpoints(student);
+                html = HtmlFormatter.generateHtml(student, ro);
+                //System.out.println(html);
+
+            } else {
+                html = "<b>Student not found</b>";
+            }
         }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+
         out.println(html);
     }
 
