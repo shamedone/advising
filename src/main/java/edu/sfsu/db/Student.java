@@ -53,9 +53,9 @@ public class Student {
                     wip = course;
                     continue;
                 }
-                if (!course.isPassingGrade()) {
-                    continue;
-                }
+                //if (!course.isPassingGrade()) {
+                //    continue;
+                //}
                 return course;
             }
         }
