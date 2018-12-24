@@ -30,13 +30,13 @@ public class Student {
     public Map<String, String> comments;
 
 
-    public Course requirementFor(Object course) {
+    public Requirement requirementFor(Object course) {
         if (course instanceof String) {
             return requirementFor((String) course);
         }
         // List of alternative courses
         for (Object courseName : (List<Object>) course) {
-            Course c = requirementFor((String) courseName);
+            Requirement c = requirementFor((String) courseName);
             if (c != null) {
                 return c;
             }
@@ -44,21 +44,26 @@ public class Student {
         return null;
     }
 
-    private Course requirementFor(String courseName) {
-        Course wip = null;
+    private Requirement requirementFor(String courseName) {
+        Requirement req = new Requirement(courseName);
         for (Course course : courses) {
             if (course.courseName.equals(courseName)) {
                 if (course.grade.equals("")) {
                     // Course taken this semester
-                    wip = course;
-                    continue;
+                    //wip = course;
+                    req.addGrade("IP"); //mark class as in progress
                 }
-                if (!course.isPassingGrade()) {
-                    continue;
+                else if (!course.isPassingGrade()) {
+                    req.addGrade(course); // if its not a passing grade,  its just an attempt and we record it as such.
                 }
-                return course;
+                else                      //
+                    req.setPassedCourse(course);//passed course saved as passing course.
+                // Saving a course either by "addGrade" or "setPassedCourse" sets the last_sem field of the requirement
+                // class, allowing the most recent attempt or the semester the course was passed to be displayed.
             }
         }
-        return wip;
+        if (req.gradeSequence == null)
+            return null;
+        return req;
     }
 }
