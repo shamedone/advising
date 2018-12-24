@@ -4,12 +4,8 @@
     <input type='hidden' id='student_last_name' value='%%student_last_name%%'>
     <input type='hidden' id='student_email' value='%%student_email%%'>
     <h5>Comments</h5>
-    <form onsubmit="return update_checkpoints('%%student_id%%');">
-        <textarea id='comments' placeholder='Comments...' style='width: 100%' rows='12'>%%comments%%</textarea>
-        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-            Save comments
-        </button>
-    </form>
+        <textarea disabled id='comments' placeholder='No comments' style='width: 100%' rows='12'>%%comments%%</textarea>
+
     <div class='vertical-padding'></div>
     <h5>Checkpoints</h5>
     <table class='mdl-data-table mdl-js-data-table mdl-shadow--2dp'>
@@ -25,7 +21,7 @@
         <tr>
             <td class='mdl-data-table__cell--non-numeric'>
                 <label id='label_%%checkpoint_id%%' class='mdl-switch mdl-js-switch mdl-js-ripple-effect' for='%%checkpoint_id%%' %%style%%>
-                    <input type='checkbox' id='%%checkpoint_id%%' class='mdl-switch__input' onclick="return checkpoint_toggled('%%student_id%%', '%%checkpoint_id%%');" %%checked%%/>
+                    <input type='checkbox' id='%%checkpoint_id%%' class='mdl-switch__input' disabled %%checked%%/>
                     <span class='mdl-switch__label'></span>
                 </label>
             </td>
@@ -33,8 +29,8 @@
             <td class='mdl-data-table__cell--non-numeric'>
                 <form onsubmit="return update_checkpoints('%%student_id%%');">
                     <div class='mdl-textfield mdl-js-textfield'>
-                        <input class='mdl-textfield__input' type='text' size='10' id='date_%%checkpoint_id%%' %%date_value%%/>
-                        <label class='mdl-textfield__label' for='date_%%checkpoint_id%%'>%%label%%...</label>
+                        <input class='mdl-textfield__input' type='text' size='10' id='date_%%checkpoint_id%%' disabled %%date_value%%/>
+                        <label class='mdl-textfield__label' for='date_%%checkpoint_id%%' >%%label%%...</label>
                     </div>
                 </form>
             </td>
@@ -66,16 +62,14 @@
         <!--%%BLOCK:details%%-->
         <td class='mdl-data-table__cell--non-numeric'>%%transfer%%</td>
         <td class='mdl-data-table__cell--non-numeric'>%%semester%%</td>
-        <td class='mdl-data-table__cell--non-numeric %%fail_flag%%'>%%grade%%</td>
+        <td class='mdl-data-table__cell--non-numeric'>%%grade%%</td>
         <!--%%END%%-->
         <!--%%BLOCK:comment%%-->
         <td class='mdl-data-table__cell--non-numeric'>
-          <form onsubmit="return update_comment('%%student_id%%', '%%course_id%%');">
             <div class='mdl-textfield mdl-js-textfield full-width'>
-              <input class='mdl-textfield__input full-width' type='text' id='%%course_id%%' %%comment%%/>
-              <label class='mdl-textfield__label' for='%%course_id%%'>Comment...</label>
+              <input class='mdl-textfield__input full-width' type='text' id='%%course_id%%' %%comment%% disabled/>
+              <label class='mdl-textfield__label' for='%%course_id%%' disabled>Comment...</label>
             </div>
-          </form>
         </td>
         <!--%%END%%-->
       </tr>
