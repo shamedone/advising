@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.*;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.UUID;
 import javax.servlet.*;
@@ -186,6 +187,32 @@ public class AdvisingServlet extends HttpServlet {
 
     private void processGenerateList(PrintWriter out, String type) {
         List<Student> students = checkpointDB.generateList(type);
+        //System.out.println(type);
+        if (type.equals("413_current")){
+            students = generate413Student(students); //TODO create method matching this in each campusTestDB and oracle DB.
+        }
         CSVFormatter.generateList(out, students, type);
+    }
+
+
+    private List<Student> generate413Student(List<Student> students){
+        List<Student> csc413_students = new ArrayList<Student>();
+        String current_semester = Util.getCurrentSemester();
+        //System.out.println(Util.formatSemester(current_semester));
+
+        for (Student student : students) {
+            //System.out.println(student.id);
+            List<Course> course_list = campusDB.getStudent(student.id).courses;
+            for (Course course : course_list) {
+                //System.out.println(course.courseName + " " + course.semester);
+                if (course.courseName.equals("CSC 413") && course.semester.equals(Util.formatSemester(current_semester))) {
+                    csc413_students.add(student);
+                    break;
+                }
+            }
+        }
+
+        return csc413_students;
+
     }
 }

@@ -81,8 +81,8 @@ public class CampusTestDB extends DB implements CampusDB {
 
 
                 connection.close();
-                System.out.println("Done");
-                System.out.println(student.lastName);
+                //System.out.println("Done");
+                //System.out.println(student.lastName);
                 return student;
 
             }
