@@ -73,9 +73,7 @@ public class HtmlFormatter {
                         HTMLSniplet details = courseFragment.instantiate("details");
                         details.p("transfer", "");
                         details.p("semester", "");
-                        details.p("fail_flag", "passed");
-                        if (!course.isPassingGrade())
-                            details.p("fail_flag", "failed");
+                        details.p("grade", "");
                     }
                     generateCommentField(courseFragment, student, courseName);
                 }
