@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.servlet.*;
 
 public class AdvisingServlet extends HttpServlet {
@@ -118,11 +116,18 @@ public class AdvisingServlet extends HttpServlet {
 
         if (path.equals("/generate-list")) {
             String type = request.getParameter("type");
+            String start_date = "NA";
+            String end_date = "NA";
+            if (type.equals("graduate_yr") || type.equals("413_yr")){
+                start_date = request.getParameter("start_date");
+                end_date = request.getParameter("end_date");
+            }
             response.setContentType("text/csv");
             response.addHeader("Content-Disposition", "attachment; filename=list-" + type + ".csv");
             response.addHeader("Pragma", "no-cache");
-            processGenerateList(out, type);
+            processGenerateList(out, type, start_date, end_date);
         }
+
         out.close();
     }
 
@@ -156,7 +161,7 @@ public class AdvisingServlet extends HttpServlet {
         boolean ro = false;
         if (readonly.equals("true"))
             ro = true;
-        try{
+
             if (student != null) {
                 commentDB.getComments(student);
                 checkpointDB.getCheckpoints(student);
@@ -166,10 +171,7 @@ public class AdvisingServlet extends HttpServlet {
             } else {
                 html = "<b>Student not found</b>";
             }
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+
 
         out.println(html);
     }
@@ -185,11 +187,14 @@ public class AdvisingServlet extends HttpServlet {
                 checkpointAdvising413, checkpointSubmittedApplication, comments);
     }
 
-    private void processGenerateList(PrintWriter out, String type) {
+    private void processGenerateList(PrintWriter out, String type, String startDate, String endDate) {
         List<Student> students = checkpointDB.generateList(type);
         //System.out.println(type);
         if (type.equals("413_current")){
             students = generate413Student(students); //TODO create method matching this in each campusTestDB and oracle DB.
+        }
+        if (type.equals("graduate_yr") || type.equals("413_yr")){
+            students = filterQueryByDate(students, type, startDate, endDate);
         }
         CSVFormatter.generateList(out, students, type);
     }
@@ -214,5 +219,32 @@ public class AdvisingServlet extends HttpServlet {
 
         return csc413_students;
 
+    }
+    private List<Student> filterQueryByDate(List<Student> students, String type, String startDate, String endDate){
+        List<Student> filteredStudents = new ArrayList<Student>();
+        for (Student student : students) {
+            String queryDate = student.checkpointAdvising413;
+            if (type.equals("graduate_yr"))
+                queryDate = student.checkpointSubmittedApplication;
+            Calendar compare = Calendar.getInstance();
+            Calendar start = Calendar.getInstance();
+            Calendar end = Calendar.getInstance();
+            System.out.println(startDate);
+            System.out.println(endDate);
+            SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy"); //pattern matching needs to be consistent with date format in checkpointDB.
+            try {
+                compare.setTime(formater.parse(queryDate));
+                compare.setTime(formater.parse(startDate.replace("@", "/")));
+                compare.setTime(formater.parse(endDate.replace("@", "/")));
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            if (!(compare.before(start) || compare.after(end))){
+                filteredStudents.add(student);
+            }
+        }
+        return filteredStudents;
     }
 }

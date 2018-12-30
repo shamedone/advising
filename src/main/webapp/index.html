@@ -201,7 +201,15 @@
         }
 
         function generateList(button, type) {
+            var start_date;
+            var end_date;
             var url = "generate-list?token=" + token + "&type=" + type;
+            if (type == 'graduate_yr' || type == '413_yr'){
+                start_date = $( "#grad_day_start" ).val() + "@"+$( "#grad_mon_start" ).val()+"@"+$( "#grad_yr_start" ).val();
+                end_date =$( "#grad_day_end" ).val() + "@"+$( "#grad_mon_end" ).val()+"@"+$( "#grad_yr_end" ).val();
+                url = "generate-list-date?token=" + token + "&type=" + type +"&start_date="+start_date+"&end_date="+end_date;
+
+            }
             var iframe = document.createElement("iframe");
             iframe.setAttribute("src", url);
             iframe.setAttribute("style", "display: none");
@@ -219,6 +227,7 @@
             */
             return false;
         }
+
     </script>
 </head>
 <body class="mdl-demo mdl-color-text--grey-700 mdl-base">
@@ -310,7 +319,132 @@
                     <p>Compile a list of all students who have applied to graduate during the current semester.</p>
                     <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, 'graduated_current')">
                     <i class="material-icons">forward</i>
-                </button>
+                    </button>
+                    <p>Complile a list of all students who have applied to graduate within a particular date range</p>
+                    Start Date:
+                    <select id="grad_day_start">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <select id="grad_mon_start">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="grad_yr_start">
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019" selected>2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <br><br>
+                    End Date:
+                    <select id="grad_day_end">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <select id="grad_mon_end">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="grad_yr_end">
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019" selected>2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList_date(this, 'graduated_yr')">
+                    <i class="material-icons">forward</i>
                 </div>
             </section>
         </div>
