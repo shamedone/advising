@@ -57,10 +57,12 @@ public class HtmlFormatter {
     private static void generateClassList(HTMLSniplet fragment, Student student, String heading, List<Object> classes,
                                           boolean showMissing, boolean showDetails) {
         HTMLSniplet section = fragment.instantiate("section");
+
         section.p("heading", heading);
         if (showDetails) {
             section.instantiate("details");
         }
+
         for (Object clazz : classes) {
             Course course = student.requirementFor(clazz);
             if (course == null) {
@@ -73,9 +75,9 @@ public class HtmlFormatter {
                         HTMLSniplet details = courseFragment.instantiate("details");
                         details.p("transfer", "");
                         details.p("semester", "");
+                        details.p("grade", "");
                         details.p("fail_flag", "passed");
-                        if (!course.isPassingGrade())
-                            details.p("fail_flag", "failed");
+
                     }
                     generateCommentField(courseFragment, student, courseName);
                 }
@@ -93,9 +95,15 @@ public class HtmlFormatter {
                 details.p("transfer", transfer);
                 details.p("semester", replaceSpaces(course.semester));
                 details.p("grade", course.grade);
+                if (!course.isPassingGrade())
+                    details.p("fail_flag", "failed");
+                else
+                    details.p("fail_flag", "passed");
+
             }
             generateCommentField(courseFragment, student, course.courseName);
         }
+        return;
     }
 
     private static String replaceSpaces(String s) {
@@ -121,10 +129,15 @@ public class HtmlFormatter {
                 "advising_413", true);
         generateCheckpoint(fragment, student.id, student.checkpointSubmittedApplication,
                 "Submitted Graduate Application", "submitted_appl", true);
+        List<Course> saved_student_courses = new ArrayList<>(student.courses);//save original courses
+        student.courses = student.collapseCourses(); //Functions collapses repeat sources into a single course entry.
 
         generateClassList(fragment, student, "Core", CourseRequirements.core, true, true);
         generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
         generateClassList(fragment, student, "Transfers", transfers, true, false);
+        student.courses.clear();
+        student.courses.addAll(saved_student_courses);//reestablish original student course list.
+
         return fragment.render().toString();
     }
     public static String generateHtml(Student student, boolean readonly) {
@@ -148,9 +161,16 @@ public class HtmlFormatter {
         generateCheckpoint(fragment, student.id, student.checkpointSubmittedApplication,
                 "Submitted Graduate Application", "submitted_appl", true);
 
+        List<Course> saved_student_courses = new ArrayList<>(student.courses);//save original courses
+        student.courses = student.collapseCourses(); //Functions collapses repeat sources into a single course entry.
+
         generateClassList(fragment, student, "Core", CourseRequirements.core, true, true);
         generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
         generateClassList(fragment, student, "Transfers", transfers, true, false);
+
+        student.courses.clear();
+        student.courses.addAll(saved_student_courses);//reestablish original student course list.
+
         return fragment.render().toString();
     }
 }

@@ -155,20 +155,17 @@ public class AdvisingServlet extends HttpServlet {
         boolean ro = false;
         if (readonly.equals("true"))
             ro = true;
-        try{
-            if (student != null) {
-                commentDB.getComments(student);
-                checkpointDB.getCheckpoints(student);
-                html = HtmlFormatter.generateHtml(student, ro);
-                //System.out.println(html);
 
-            } else {
-                html = "<b>Student not found</b>";
-            }
+        if (student != null) {
+            commentDB.getComments(student);
+            checkpointDB.getCheckpoints(student);
+            html = HtmlFormatter.generateHtml(student, ro);
+           // System.out.println(html);
+
+        } else {
+            html = "<b>Student not found</b>";
         }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+
 
         out.println(html);
     }
