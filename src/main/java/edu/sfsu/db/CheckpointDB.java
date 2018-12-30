@@ -1,8 +1,12 @@
 package edu.sfsu.db;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
+
 
 public class CheckpointDB extends DB {
 
@@ -142,6 +146,54 @@ public class CheckpointDB extends DB {
         }
     }
 
+    public List<Student> filterForCurrentGrad(List<Student> tempList){
+
+        List<Student> list = new ArrayList<Student>();
+        String current_semester = Util.formatSemester(Util.getCurrentSemester());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new java.util.Date());
+        int year = cal.get(Calendar.YEAR);
+        Calendar semester_start = Calendar.getInstance();//Block of code below sets start and end dates for each semester.
+        semester_start.set(year, 8, 15); //defaults to fall semsester.
+        Calendar semester_end = Calendar.getInstance();
+        semester_end.set(year, 12, 31);
+        if (current_semester.startsWith("Wi")) {
+            semester_start.set(year, 1, 1); //winter
+            semester_end.set(year, 1, 25);
+
+        }
+        if (current_semester.startsWith("Spr")) {
+            semester_start.set(year, 1, 27);//spring
+            semester_end.set(year, 5, 30);
+        }
+        if (current_semester.startsWith("Sum")) {
+            semester_start.set(year, 6, 1);//summer
+            semester_end.set(year, 8, 10);
+        }
+
+        for (Student student : tempList){
+            String grad_date = student.checkpointSubmittedApplication;
+            Calendar g_date = Calendar.getInstance();
+            String [] g_date_arr = grad_date.split("/");
+           // System.out.println(grad_date);
+            SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy"); //pattern matching needs to be consistent with date format in checkpointDB.
+
+            try {
+                g_date.setTime(formater.parse(grad_date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                continue;
+            }
+           // System.out.println("before" + semester_start.getTime());
+           // System.out.println("after" + semester_end.getTime());
+           // System.out.println(g_date.getTime());
+            if (!(g_date.before(semester_start) || g_date.after(semester_end))){
+                list.add(student);
+            }
+        }
+        return list;
+    }
+
     public List<Student> generateList(String type) {
         List<Student> list = new ArrayList<>();
         Connection connection = null;
@@ -170,6 +222,7 @@ public class CheckpointDB extends DB {
                 student.checkpointAdvising413 = rs.getString(KEY_ADVISING_413);
                 student.checkpointSubmittedApplication = rs.getString(KEY_SUBMITTED_APPL);
                 list.add(student);
+                //System.out.println(student.firstName);
             }
             rs.close();
             ps.close();
@@ -182,6 +235,11 @@ public class CheckpointDB extends DB {
                 } catch (SQLException e) {
                 }
             }
+        }
+        if (type.equals("graduated_current")) {
+            System.out.println("grad current test");
+            list = filterForCurrentGrad(list);
+
         }
         return list;
     }
