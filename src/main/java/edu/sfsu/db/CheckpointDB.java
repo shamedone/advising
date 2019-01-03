@@ -150,31 +150,31 @@ public class CheckpointDB extends DB {
 
         List<Student> list = new ArrayList<Student>();
         String current_semester = Util.formatSemester(Util.getCurrentSemester());
+        //System.out.println(current_semester);
         Calendar cal = Calendar.getInstance();
         cal.setTime(new java.util.Date());
         int year = cal.get(Calendar.YEAR);
         Calendar semester_start = Calendar.getInstance();//Block of code below sets start and end dates for each semester.
-        semester_start.set(year, 8, 15); //defaults to fall semsester.
+        semester_start.set(year, Calendar.AUGUST, 15); //defaults to fall semsester.
         Calendar semester_end = Calendar.getInstance();
-        semester_end.set(year, 12, 31);
+        semester_end.set(year, Calendar.DECEMBER, 31);
         if (current_semester.startsWith("Wi")) {
-            semester_start.set(year, 1, 1); //winter
-            semester_end.set(year, 1, 25);
+            semester_start.set(year, Calendar.JANUARY, 1); //winter
+            semester_end.set(year, Calendar.JANUARY, 26);
 
         }
         if (current_semester.startsWith("Spr")) {
-            semester_start.set(year, 1, 27);//spring
-            semester_end.set(year, 5, 30);
+            semester_start.set(year, Calendar.JANUARY, 27);//spring
+            semester_end.set(year, Calendar.MAY, 30);
         }
         if (current_semester.startsWith("Sum")) {
-            semester_start.set(year, 6, 1);//summer
-            semester_end.set(year, 8, 10);
+            semester_start.set(year, Calendar.JUNE, 1);//summer
+            semester_end.set(year, Calendar.AUGUST, 10);
         }
 
         for (Student student : tempList){
             String grad_date = student.checkpointSubmittedApplication;
             Calendar g_date = Calendar.getInstance();
-            String [] g_date_arr = grad_date.split("/");
            // System.out.println(grad_date);
             SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy"); //pattern matching needs to be consistent with date format in checkpointDB.
 
@@ -184,9 +184,9 @@ public class CheckpointDB extends DB {
                 e.printStackTrace();
                 continue;
             }
-           // System.out.println("before" + semester_start.getTime());
-           // System.out.println("after" + semester_end.getTime());
-           // System.out.println(g_date.getTime());
+            //System.out.println("before" + semester_start.getTime());
+            //System.out.println("after" + semester_end.getTime());
+            //System.out.println(g_date.getTime());
             if (!(g_date.before(semester_start) || g_date.after(semester_end))){
                 list.add(student);
             }
@@ -234,7 +234,7 @@ public class CheckpointDB extends DB {
             }
         }
         if (type.equals("graduated_current")) {
-            System.out.println("grad current test");
+            //System.out.println("grad current test");
             list = filterForCurrentGrad(list);
 
         }
