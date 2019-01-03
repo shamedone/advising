@@ -70,7 +70,7 @@ public class AdvisingServlet extends HttpServlet {
             return;
         }
 
-        if (path.equals("/lookup-student")) {
+/*        if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             String token = request.getParameter("token");
             String readonly = request.getParameter("readonly");
@@ -78,7 +78,7 @@ public class AdvisingServlet extends HttpServlet {
                 readonly = "true";
             }
             processLookupStudent(out, id, readonly);
-        }
+        }*/
 
         String token = request.getParameter("token");
         if (token == null || !token.equals(this.token)) {
@@ -89,10 +89,10 @@ public class AdvisingServlet extends HttpServlet {
 
 
 
-      /*  if (path.equals("/lookup-student")) {
+       if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             processLookupStudent(out, id);
-        }*/
+        }
 
         if (path.equals("/update-comment")) {
             String id = request.getParameter("id");
@@ -118,7 +118,7 @@ public class AdvisingServlet extends HttpServlet {
             String type = request.getParameter("type");
             String start_date = "NA";
             String end_date = "NA";
-            if (type.equals("graduate_yr") || type.equals("413_yr")){
+            if (type.equals("graduated_yr") || type.equals("413_yr")){
                 start_date = request.getParameter("start_date");
                 end_date = request.getParameter("end_date");
             }
@@ -153,7 +153,7 @@ public class AdvisingServlet extends HttpServlet {
         out.println(html);
     }
 
-    private void processLookupStudent(PrintWriter out, String id, String readonly) throws IOException {
+/*    private void processLookupStudent(PrintWriter out, String id, String readonly) throws IOException {
         Student student = campusDB.getStudent(id);
         String html = null;
         //System.out.println("data");
@@ -171,10 +171,8 @@ public class AdvisingServlet extends HttpServlet {
             } else {
                 html = "<b>Student not found</b>";
             }
-
-
         out.println(html);
-    }
+    }*/
 
     private void processUpdateComment(String id, String course, String comment) {
         commentDB.updateComment(id, course, comment);
@@ -193,7 +191,7 @@ public class AdvisingServlet extends HttpServlet {
         if (type.equals("413_current")){
             students = generate413Student(students); //TODO create method matching this in each campusTestDB and oracle DB.
         }
-        if (type.equals("graduate_yr") || type.equals("413_yr")){
+        if (type.equals("graduated_yr") || type.equals("413_yr")){
             students = filterQueryByDate(students, type, startDate, endDate);
         }
         CSVFormatter.generateList(out, students, type);
@@ -224,18 +222,18 @@ public class AdvisingServlet extends HttpServlet {
         List<Student> filteredStudents = new ArrayList<Student>();
         for (Student student : students) {
             String queryDate = student.checkpointAdvising413;
-            if (type.equals("graduate_yr"))
+            if (type.equals("graduated_yr"))
                 queryDate = student.checkpointSubmittedApplication;
             Calendar compare = Calendar.getInstance();
             Calendar start = Calendar.getInstance();
             Calendar end = Calendar.getInstance();
-            System.out.println(startDate);
-            System.out.println(endDate);
-            SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy"); //pattern matching needs to be consistent with date format in checkpointDB.
+            //System.out.println(startDate);
+            //System.out.println(endDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy"); //pattern matching needs to be consistent with date format in checkpointDB.
             try {
-                compare.setTime(formater.parse(queryDate));
-                compare.setTime(formater.parse(startDate.replace("@", "/")));
-                compare.setTime(formater.parse(endDate.replace("@", "/")));
+                compare.setTime(formatter.parse(queryDate));
+                start.setTime(formatter.parse(startDate.replace("@", "/")));
+                end.setTime(formatter.parse(endDate.replace("@", "/")));
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
                 continue;

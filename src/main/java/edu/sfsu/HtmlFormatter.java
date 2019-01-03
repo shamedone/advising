@@ -126,7 +126,7 @@ public class HtmlFormatter {
         generateClassList(fragment, student, "Transfers", transfers, true, false);
         return fragment.render().toString();
     }
-    public static String generateHtml(Student student, boolean readonly) {
+    /*public static String generateHtml(Student student, boolean readonly) {
         HTMLSniplet fragment = null;
         if (readonly)
             fragment = studentROFragment.copy();
@@ -151,5 +151,5 @@ public class HtmlFormatter {
         generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
         generateClassList(fragment, student, "Transfers", transfers, true, false);
         return fragment.render().toString();
-    }
+    }*/
 }

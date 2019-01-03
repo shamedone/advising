@@ -74,13 +74,13 @@
             });
             return false;
         }
-        function student_login() {
+/*        function student_login() {
 
             var section_main_read_only = document.getElementById("senior_advising_read_only");
             section_main_read_only.style.display = "block";
             section_login.style.display = "none";
             return false;
-        }
+        }*/
 
         function show_print_page() {
             var printWindow = window.open("", "", "width=800, height=800");
@@ -90,20 +90,20 @@
             printWindow.document.close();
         }
 
-        function lookup_student(readonly) {
+        function lookup_student() {
             $('#student_id').blur();
             var id = document.getElementById("student_id");
             var section = document.getElementById("section_student_info");
             var info = document.getElementById("student_info");
-            if (readonly =="true"){
-                id = document.getElementById("student_id_ro");
-                section = document.getElementById("section_student_info_ro");
-                info = document.getElementById("student_info_ro");
-            }
+            // if (readonly =="true"){
+            //     id = document.getElementById("student_id_ro");
+            //     section = document.getElementById("section_student_info_ro");
+            //     info = document.getElementById("student_info_ro");
+            // }
 
             section.style.display = "none";
             show_spinner();
-            $.post("lookup-student", {token: token, id: id.value, readonly: readonly}, function(data, status) {
+            $.post("lookup-student", {token: token, id: id.value}, function(data, status) {
                 console.log(token);
                 info.innerHTML = data;
                 componentHandler.upgradeAllRegistered();
@@ -141,6 +141,25 @@
             var checkpointAdvising413 = checkpointAdvising413Node.value;
             var checkpointSubmittedAppl = checkpointSubmittedApplNode.value;
             var comments = commentsNode.value;
+            var pattern =/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+            if (checkpointOralPresentation != ""){
+                if (!(pattern.test(checkpointOralPresentation))) {
+                    alert("Oral Presentation date in wrong format. Must be MM/DD/YYYY")
+                    return false;
+                }
+            }
+            if (checkpointAdvising413 != ""){
+                if (!(pattern.test(checkpointAdvising413))){
+                    alert("413 Advising date in wrong format. Must be MM/DD/YYYY")
+                    return false;
+                }
+            }
+            if (checkpointSubmittedAppl != "") {
+                if (!(pattern.test(checkpointSubmittedAppl))){
+                    alert("Graduate Application date in wrong format. Must be MM/DD/YYYY")
+                    return false;
+                }
+            }
 
             // Write back the attribute so that later innerHtml will read the updated values
             // for the printing page
@@ -204,11 +223,16 @@
             var start_date;
             var end_date;
             var url = "generate-list?token=" + token + "&type=" + type;
-            if (type == 'graduate_yr' || type == '413_yr'){
-                start_date = $( "#grad_day_start" ).val() + "@"+$( "#grad_mon_start" ).val()+"@"+$( "#grad_yr_start" ).val();
-                end_date =$( "#grad_day_end" ).val() + "@"+$( "#grad_mon_end" ).val()+"@"+$( "#grad_yr_end" ).val();
-                url = "generate-list-date?token=" + token + "&type=" + type +"&start_date="+start_date+"&end_date="+end_date;
+            if (type == 'graduated_yr'){
+                start_date = $( "#grad_mon_start" ).val() + "@"+$( "#grad_day_start" ).val()+"@"+$( "#grad_yr_start" ).val();
+                end_date =$( "#grad_mon_end" ).val() + "@"+$( "#grad_day_end" ).val()+"@"+$( "#grad_yr_end" ).val();
+                url = "generate-list?token=" + token + "&type=" + type +"&start_date="+start_date+"&end_date="+end_date;
+            }
 
+            if (type == '413_yr'){
+                start_date = $( "#413_mon_start" ).val() + "@"+$( "#413_day_start" ).val()+"@"+$( "#413_yr_start" ).val();
+                end_date =$( "#413_mon_end" ).val() + "@"+$( "#413_day_end" ).val()+"@"+$( "#413_yr_end" ).val();
+                url = "generate-list?token=" + token + "&type=" + type +"&start_date="+start_date+"&end_date="+end_date;
             }
             var iframe = document.createElement("iframe");
             iframe.setAttribute("src", url);
@@ -275,7 +299,7 @@
             <section class="section--center mdl-grid mdl-grid--no-spacing">
                 <div class="mdl-card__supporting-text">
                     <h4>Senior Advising</h4>
-                    <form onsubmit="return lookup_student('false');">
+                    <form onsubmit="return lookup_student();">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id" />
                             <label class="mdl-textfield__label" for="student_id">Student ID</label>
@@ -299,11 +323,140 @@
                     <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, '413')">
                         <i class="material-icons">forward</i>
                     </button>
+                    <br><br><br>
                     <p>Compile a list of all students who are currently enrolled in 413 advising in the current semester. </p>
 
                     <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, '413_current')">
                         <i class="material-icons">forward</i>
                     </button>
+                    <br><br><br>
+                    <p>Complile a list of all students who have applied to graduate within a particular date range</p>
+                    Start Date:
+                    <select id="413_day_start">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <select id="413_mon_start">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="413_yr_start">
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019" selected>2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <br><br>
+                    End Date:&nbsp;&nbsp;
+                    <select id="413_day_end">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                    <select id="413_mon_end">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="413_yr_end">
+                        <option value="2014">2014</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019" selected>2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <br><br>
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, '413_yr')">
+                        <i class="material-icons">forward</i>
+                    </button>
+
                 </div>
             </section>
         </div>
@@ -316,10 +469,13 @@
                     <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, 'graduated')">
                         <i class="material-icons">forward</i>
                     </button>
+                    <br><br><br>
                     <p>Compile a list of all students who have applied to graduate during the current semester.</p>
                     <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, 'graduated_current')">
                     <i class="material-icons">forward</i>
                     </button>
+                    <br><br><br>
+
                     <p>Complile a list of all students who have applied to graduate within a particular date range</p>
                     Start Date:
                     <select id="grad_day_start">
@@ -382,7 +538,7 @@
                         <option value="2023">2023</option>
                     </select>
                     <br><br>
-                    End Date:
+                    End Date:&nbsp;&nbsp;
                     <select id="grad_day_end">
                         <option value="01">01</option>
                         <option value="02">02</option>
@@ -442,31 +598,15 @@
                         <option value="2022">2022</option>
                         <option value="2023">2023</option>
                     </select>
-
-                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList_date(this, 'graduated_yr')">
+                    <br><br>
+                    <button class="mdl-button mdl-js-button mdl-button--fab" onclick="return generateList(this, 'graduated_yr')">
                     <i class="material-icons">forward</i>
+                    </button>
+
                 </div>
             </section>
         </div>
     </main>
-    <div class="mdl-layout__tab-panel" id="senior_advising_read_only" style="display: none">
-        <section class="section--center mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-card__supporting-text">
-                <h4>Senior Advising</h4>
-                <form onsubmit="return lookup_student('true');">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="student_id_ro" />
-                        <label class="mdl-textfield__label" for="student_id">Student ID</label>
-                        <span class="mdl-textfield__error">Input is not a student ID!</span>
-                    </div>
-                </form>
-            </div>
-            <div id="section_student_info_ro" style="display: none">
-                <img style="float: right" onclick="show_print_page()" src="ic_print_black_24dp_1x.png"/>
-                <div id="student_info_ro"></div>
-            </div>
-        </section>
-    </div>
     <div id="toast" class="mdl-js-snackbar mdl-snackbar">
         <div class="mdl-snackbar__text"></div>
         <button class="mdl-snackbar__action" type="button"></button>
