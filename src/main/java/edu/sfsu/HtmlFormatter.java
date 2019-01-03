@@ -140,37 +140,4 @@ public class HtmlFormatter {
 
         return fragment.render().toString();
     }
-    public static String generateHtml(Student student, boolean readonly) {
-        HTMLSniplet fragment = null;
-        if (readonly)
-            fragment = studentROFragment.copy();
-        else
-            fragment = studentInfoFragment.copy();
-
-        fragment.p("student_first_name", student.firstName);
-        fragment.p("student_last_name", student.lastName);
-        fragment.p("student_email", student.email);
-        fragment.p("student_id", student.id);
-
-        fragment.p("comments", student.comment);
-
-        generateCheckpoint(fragment, student.id, student.checkpointOralPresentation,
-                "Senior Oral Presentation", "oral_presentation", false);
-        generateCheckpoint(fragment, student.id, student.checkpointAdvising413, "413 Advising",
-                "advising_413", true);
-        generateCheckpoint(fragment, student.id, student.checkpointSubmittedApplication,
-                "Submitted Graduate Application", "submitted_appl", true);
-
-        List<Course> saved_student_courses = new ArrayList<>(student.courses);//save original courses
-        student.courses = student.collapseCourses(); //Functions collapses repeat sources into a single course entry.
-
-        generateClassList(fragment, student, "Core", CourseRequirements.core, true, true);
-        generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
-        generateClassList(fragment, student, "Transfers", transfers, true, false);
-
-        student.courses.clear();
-        student.courses.addAll(saved_student_courses);//reestablish original student course list.
-
-        return fragment.render().toString();
-    }
 }

@@ -71,7 +71,7 @@ public class AdvisingServlet extends HttpServlet {
             return;
         }
 
-        if (path.equals("/lookup-student")) {
+/*        if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             String token = request.getParameter("token");
             String readonly = request.getParameter("readonly");
@@ -79,7 +79,7 @@ public class AdvisingServlet extends HttpServlet {
                 readonly = "true";
             }
             processLookupStudent(out, id, readonly);
-        }
+        }*/
 
         String token = request.getParameter("token");
         if (token == null || !token.equals(this.token)) {
@@ -88,12 +88,10 @@ public class AdvisingServlet extends HttpServlet {
         }
 
 
-
-
-      /*  if (path.equals("/lookup-student")) {
+        if (path.equals("/lookup-student")) {
             String id = request.getParameter("id");
             processLookupStudent(out, id);
-        }*/
+        }
 
         if (path.equals("/update-comment")) {
             String id = request.getParameter("id");
@@ -144,29 +142,6 @@ public class AdvisingServlet extends HttpServlet {
         } else {
             html = "<b>Student not found</b>";
         }
-        out.println(html);
-    }
-
-    private void processLookupStudent(PrintWriter out, String id, String readonly) throws IOException {
-        Student student = campusDB.getStudent(id);
-        String html = null;
-        //System.out.println("data");
-        //System.out.println(readonly);
-        boolean ro = false;
-        if (readonly.equals("true"))
-            ro = true;
-
-        if (student != null) {
-            commentDB.getComments(student);
-            checkpointDB.getCheckpoints(student);
-            html = HtmlFormatter.generateHtml(student, ro);
-           // System.out.println(html);
-
-        } else {
-            html = "<b>Student not found</b>";
-        }
-
-
         out.println(html);
     }
 
