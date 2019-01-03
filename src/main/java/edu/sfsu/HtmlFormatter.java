@@ -25,13 +25,10 @@ public class HtmlFormatter {
 
 
     private static HTMLSniplet studentInfoFragment;
-    private static HTMLSniplet studentROFragment;
 
     public static void init(ServletContext context) {
         InputStream is = context.getResourceAsStream("/WEB-INF/classes/student_sniplet.html");
         studentInfoFragment = HTMLSniplet.fromInputStream(is);
-        InputStream is_ro = context.getResourceAsStream("/WEB-INF/classes/readonly_student_sniplet.html");
-        studentROFragment = HTMLSniplet.fromInputStream(is_ro);
     }
 
     private static void generateCheckpoint(HTMLSniplet fragment, String studentId, String date, String checkpointDescr,
@@ -106,32 +103,6 @@ public class HtmlFormatter {
 
     public static String generateHtml(Student student) {
         HTMLSniplet fragment = studentInfoFragment.copy();
-        fragment.p("student_first_name", student.firstName);
-        fragment.p("student_last_name", student.lastName);
-        fragment.p("student_email", student.email);
-        fragment.p("student_id", student.id);
-
-        fragment.p("comments", student.comment);
-
-        generateCheckpoint(fragment, student.id, student.checkpointOralPresentation,
-                "Senior Oral Presentation", "oral_presentation", false);
-        generateCheckpoint(fragment, student.id, student.checkpointAdvising413, "413 Advising",
-                "advising_413", true);
-        generateCheckpoint(fragment, student.id, student.checkpointSubmittedApplication,
-                "Submitted Graduate Application", "submitted_appl", true);
-
-        generateClassList(fragment, student, "Core", CourseRequirements.core, true, true);
-        generateClassList(fragment, student, "Electives", CourseRequirements.electives, false, true);
-        generateClassList(fragment, student, "Transfers", transfers, true, false);
-        return fragment.render().toString();
-    }
-    public static String generateHtml(Student student, boolean readonly) {
-        HTMLSniplet fragment = null;
-        if (readonly)
-            fragment = studentROFragment.copy();
-        else
-            fragment = studentInfoFragment.copy();
-
         fragment.p("student_first_name", student.firstName);
         fragment.p("student_last_name", student.lastName);
         fragment.p("student_email", student.email);
