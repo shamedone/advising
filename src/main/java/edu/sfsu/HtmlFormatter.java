@@ -25,13 +25,13 @@ public class HtmlFormatter {
 
 
     private static HTMLSniplet studentInfoFragment;
-    private static HTMLSniplet studentROFragment;
+    //private static HTMLSniplet studentROFragment;
 
     public static void init(ServletContext context) {
         InputStream is = context.getResourceAsStream("/WEB-INF/classes/student_sniplet.html");
         studentInfoFragment = HTMLSniplet.fromInputStream(is);
-        InputStream is_ro = context.getResourceAsStream("/WEB-INF/classes/readonly_student_sniplet.html");
-        studentROFragment = HTMLSniplet.fromInputStream(is_ro);
+     //   InputStream is_ro = context.getResourceAsStream("/WEB-INF/classes/readonly_student_sniplet.html");
+     //   studentROFragment = HTMLSniplet.fromInputStream(is_ro);
     }
 
     private static void generateCheckpoint(HTMLSniplet fragment, String studentId, String date, String checkpointDescr,
