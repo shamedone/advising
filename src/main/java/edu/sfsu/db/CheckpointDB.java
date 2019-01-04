@@ -207,6 +207,9 @@ public class CheckpointDB extends DB {
             if (type.equals("graduated")) {
                 query += " where " + KEY_SUBMITTED_APPL + " <> ''";
             }
+            if (type.equals("413_current")) {
+                query += " where " + KEY_SUBMITTED_APPL + " = '' or "+KEY_SUBMITTED_APPL + " is null";
+            }
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
