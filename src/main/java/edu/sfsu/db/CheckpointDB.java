@@ -201,15 +201,13 @@ public class CheckpointDB extends DB {
             connection = getConnection();
             connection.setCatalog(DB_NAME);
             String query = "select * from " + TABLE_NAME;
-            if (type.equals("413")) {
+            if (type.equals("413") || type.equals("413_current")) {
                 query += " where " + KEY_ADVISING_413 + " <> ''";
             }
-            if (type.equals("graduated")) {
+            if (type.equals("graduated") || type.equals("grad_current")) {
                 query += " where " + KEY_SUBMITTED_APPL + " <> ''";
             }
-            if (type.equals("413_current")) {
-                query += " where " + KEY_SUBMITTED_APPL + " = '' or "+KEY_SUBMITTED_APPL + " is null";
-            }
+
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -236,11 +234,7 @@ public class CheckpointDB extends DB {
                 }
             }
         }
-        if (type.equals("graduated_current")) {
-            //System.out.println("grad current test");
-            list = filterForCurrentGrad(list);
 
-        }
         return list;
     }
 }
