@@ -2,6 +2,7 @@ package edu.sfsu;
 
 import edu.sfsu.db.Course;
 import edu.sfsu.db.CourseRequirements;
+import edu.sfsu.db.Requirement;
 import edu.sfsu.db.Student;
 import edu.sfsu.sniplet.HTMLSniplet;
 
@@ -37,7 +38,7 @@ public class HtmlFormatter {
         checkpoint.p("checkpoint_id", checkpointId);
         checkpoint.p("student_id", studentId);
         checkpoint.p("checkpoint_descr", checkpointDescr);
-        checkpoint.p("style", showDateField ? "" : " style='display: none;'");
+        //checkpoint.p("style", showDateField ? "" : " style='display: none;'");
         checkpoint.p("checked", (date != null && !"".equals(date)) ? " checked" : "");
         checkpoint.p("date_value", (date != null && !"".equals(date)) ? String.format(" value='%s'", e(date)) : "");
         checkpoint.p("label", showDateField ? "Date" : "Comment");
@@ -59,8 +60,8 @@ public class HtmlFormatter {
             section.instantiate("details");
         }
         for (Object clazz : classes) {
-            Course course = student.requirementFor(clazz);
-            if (course == null) {
+            Requirement req = student.requirementFor(clazz);
+            if (req == null) {
                 if (showMissing) {
                     HTMLSniplet courseFragment = section.instantiate("course");
                     String courseName = clazz instanceof String ? (String) clazz
@@ -71,25 +72,31 @@ public class HtmlFormatter {
                         details.p("transfer", "");
                         details.p("semester", "");
                         details.p("grade", "");
+                        details.p("fail_flag", "passed");
                     }
                     generateCommentField(courseFragment, student, courseName);
                 }
                 continue;
             }
             HTMLSniplet courseFragment = section.instantiate("course");
-            courseFragment.p("course_name", replaceSpaces(course.courseName));
+            courseFragment.p("course_name", replaceSpaces(req.courseName));
             if (showDetails) {
                 HTMLSniplet details = courseFragment.instantiate("details");
                 String transfer = "";
-                if (course.transferCourse != null && course.transferSchool != null) {
-                    transfer = String.format("%s (%s)", replaceSpaces(course.transferCourse),
-                            replaceSpaces(course.transferSchool));
+                if (req.passedCourse != null && req.passedCourse.transferCourse != null && req.passedCourse.transferSchool != null) {
+                    transfer = String.format("%s (%s)", replaceSpaces(req.passedCourse.transferCourse),
+                            replaceSpaces(req.passedCourse.transferSchool));
                 }
                 details.p("transfer", transfer);
-                details.p("semester", replaceSpaces(course.semester));
-                details.p("grade", course.grade);
+                details.p("semester", replaceSpaces(req.lastSem));
+                details.p("grade", req.gradeSequence);
+                if (req.passedCourse == null) {
+                    details.p("fail_flag", "failed");
+                } else {
+                    details.p("fail_flag", "passed");
+                }
             }
-            generateCommentField(courseFragment, student, course.courseName);
+            generateCommentField(courseFragment, student, req.courseName);
         }
     }
 
